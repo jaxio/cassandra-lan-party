@@ -4,32 +4,72 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TokenCalculator {
-    
-    
+
+    // Assuming RackInferringSnitch and NetworkTopologyStrategie
     public static void main(String args[]) {
-        calculateToken(60);
+        // create a participant pool
+        List<String> participants = new ArrayList<String>();
+        for (int i=0; i < 100; i++) {
+            participants.add("PrénomNom" +i);
+        }
+        
+        // input
+        int nbDataCenter = 3;
+        int nbRackPerDataCenter = 2;
+        int nbParticipantsPerRack = 5;
+
+        
+        List<Participant> nodes = calculate(participants, nbDataCenter, nbRackPerDataCenter, nbParticipantsPerRack);
+        
+        // print the DC/Rack/IP/Token assignments...
+        for (Participant p : nodes) {
+            System.out.println(p.toString());
+        }
     }
     
-    
-    public static List<String> calculateToken(int nbHost) {
-        List<String> result = new ArrayList<String>();
+    public static List<Participant> calculate(List<String> participants, int nbDataCenter, int nbRackPerDataCenter, int nbParticipantPerRack) {
+        List<Participant> result = new ArrayList<Participant>();
+        int participantIndex =0;
         
-        for (int i=0; i < nbHost; i++) {
-            
-            BigInteger token = new BigInteger("2");
-            
-            token = token.pow(127);
-            token = token.multiply(new BigInteger(""+i));
-            token = token.divide(new BigInteger(""+nbHost));
-            
-            String tokenApprox = token.toString();
-            if (tokenApprox.length() > 1) {
-                tokenApprox = tokenApprox.substring(0,3) + tokenApprox.substring(3).replaceAll("[0-9]", "0");
-                System.out.println(tokenApprox);
-                System.out.println(tokenApprox.substring(0,3) + " followed by " + tokenApprox.substring(3).length() + " 0");
+        int nbParticipantPerDataCenter = nbRackPerDataCenter * nbParticipantPerRack;
+        
+        for (int dc=1; dc <= nbDataCenter; dc++) {
+            for (int rack=1; rack <= nbRackPerDataCenter; rack++) {
+                for (int positionInRack = 1; positionInRack <= nbParticipantPerRack ; positionInRack++) {                    
+                    Participant p = new Participant();
+                    p.name = participants.get(participantIndex++);
+                    p.dc = dc;
+                    p.rack = rack;
+                    p.positionInRack = positionInRack;                    
+                    p.nodeIndexInDataCenter = rack + (positionInRack - 1) * nbRackPerDataCenter;
+                    setParticipantToken(nbParticipantPerDataCenter, p);
+                    result.add(p);
+                }
             }
         }
-        return null;
+        
+        return result;           
+    }
+        
+    
+    public static void setParticipantToken(int nbParticipantPerDataCenter, Participant p) {
+        
+        BigInteger token = new BigInteger("2");
+        
+        token = token.pow(127);
+        token = token.multiply(new BigInteger("" + p.nodeIndexInDataCenter));
+        token = token.divide(new BigInteger("" + nbParticipantPerDataCenter));
+       
+        // for better readability we round the token
+        String tokenApprox = token.toString();
+        if (tokenApprox.length() > 1) {
+            tokenApprox = tokenApprox.substring(0,3) + tokenApprox.substring(3).replaceAll("[0-9]", "0");
+        }
+        
+        // Do the DC +1 stuff
+        tokenApprox = tokenApprox.substring(0,tokenApprox.length() -1) + (p.dc - 1); 
+        p.token = tokenApprox;
     }
 }
