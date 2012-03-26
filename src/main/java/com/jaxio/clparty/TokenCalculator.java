@@ -16,9 +16,9 @@ public class TokenCalculator {
         }
         
         // input
-        int nbDataCenter = 3;
-        int nbRackPerDataCenter = 2;
-        int nbParticipantsPerRack = 5;
+        int nbDataCenter = 1;
+        int nbRackPerDataCenter = 1;
+        int nbParticipantsPerRack = 4;
 
         
         List<Participant> nodes = calculate(participants, nbDataCenter, nbRackPerDataCenter, nbParticipantsPerRack);
@@ -59,8 +59,8 @@ public class TokenCalculator {
         BigInteger token = new BigInteger("2");
         
         token = token.pow(127);
-        token = token.multiply(new BigInteger("" + p.nodeIndexInDataCenter));
-        token = token.divide(new BigInteger("" + nbParticipantPerDataCenter));
+        token = token.multiply(new BigInteger("" + (p.nodeIndexInDataCenter -1)));
+        token = token.divide(new BigInteger("" + nbParticipantPerDataCenter));        
        
         // for better readability we round the token
         String tokenApprox = token.toString();
