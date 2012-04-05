@@ -22,4 +22,7 @@
 	<description><![CDATA[
 		Main entry point for spring configuration
 	]]></description>
+    
+        <context:component-scan base-package="org.apache.cassandra.party.service" />
+    
 </beans>
