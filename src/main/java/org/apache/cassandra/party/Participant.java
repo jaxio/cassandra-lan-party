@@ -19,19 +19,6 @@ public class Participant {
         return positionInRack + rack ;
     }
     
-    public String getDcName() {
-        switch(dc) {
-            case 1: return "Lille";
-            case 2: return "Paris";
-            case 3: return "Ajaccio";
-            default: throw new IllegalStateException("ooohh");
-        }
-    }
-    
-    public String getStyleClass() {
-        return "dc" + dc;
-    }
-    
     
     @Override
     public String toString() {
