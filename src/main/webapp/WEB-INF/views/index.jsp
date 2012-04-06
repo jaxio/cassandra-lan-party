@@ -71,13 +71,15 @@
 			  <button class="btn" id="r-sd">Slide and Dice</button>
 			</div>
 		</div>
-		
-		<div id="infovis"></div>
+		<div id="treemap">
+			<div id="infovis"></div>
+		</div>
 	</div>
 </body>
 <script>
 	function initTreeMap() {
 		$.getJSON("<%=request.getContextPath() %>/clp/rest/ring","", function(json) { displayTreeMap(json);});
+		//displayTreeMap({"children":[{"id":"fb1bf9ef-150a-4d73-8f46-48df017a7b25","name":"datacenter1","data":{"$color":"#3A87AD","$area":1,"nbRacks":1},"children":[{"id":"2de843ee-8be0-478e-90e3-b70751f6bf39","name":"rack1","data":{"$area":1,"$color":"#D9EDF7","nbMachines":3},"children":[{"name":"127.0.0.1","id":"f2479620-7fc4-4d56-9cde-9175151b5b0c","data":{"ip":"127.0.0.1","dc":"datacenter1","rack":"rack1","status":"up","state":"normal","load":"122,72 KB","owns":"8,33%","token":"127605887595351923798765477786913079296","$area":8,"$color":"#5BB75B"}},{"name":"127.0.0.3","id":"01c5cc53-a7ec-4153-9f66-8d498258a162","data":{"ip":"127.0.0.3","dc":"datacenter1","rack":"rack1","status":"up","state":"normal","load":"135,59 KB","owns":"33,33%","token":"113427455640312814857969558651062452225","$area":33,"$color":"#5BB75B"}},{"name":"127.0.0.2","id":"0e597787-b4c7-4b74-b28a-49e62c65ef88","data":{"ip":"127.0.0.2","dc":"datacenter1","rack":"rack1","status":"down","state":"normal","load":"135,56 KB","owns":"58,33%","token":"56713727820156407428984779325531226112","$area":58,"$color":"#DA4F49"}}]}]}],"id":"7d467d99-5e18-4875-9a3c-39d7ae9fb347","name":"Cluster Sat Apr 07 00:25:02 CEST 2012","data":{"$area":1,"$color":"#2d6987"}});
 	}
 </script>
 </html>

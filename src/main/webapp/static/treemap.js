@@ -1,7 +1,11 @@
-var labelType, useGradients, nativeTextSupport, animate;
+var tm, labelType, useGradients, nativeTextSupport, animate;
 
 function displayTreeMap(json) {
-    var tm = new $jit.TM.Squarified({
+	if(tm) {
+		$("#infovis").remove();
+		$("#treemap").append("<div id='infovis'></div>");
+	}
+    tm = new $jit.TM.Squarified({
     injectInto: 'infovis',
     titleHeight: 40,
     animate: animate,
@@ -54,7 +58,7 @@ function displayTreeMap(json) {
         style.display = '';
         style.border = '1px solid transparent';
         domElement.onmouseover = function() {
-          style.border = '1px solid #9FD4FF';
+          style.border = '1px solid #black';
         };
         domElement.onmouseout = function() {
           style.border = '1px solid transparent';
