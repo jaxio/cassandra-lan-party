@@ -30,20 +30,23 @@ function displayTreeMap(json) {
         if(data.nbRacks) {
           html += "nbRacks: " + data.nbRacks + "<br/>";
         }
-        if(data.nbMachines) {
-          html += "nbMachines: " + data.nbMachines + "<br/>";
+        if(data.nbNodes) {
+          html += "nbNodes: " + data.nbNodes + "<br/>";
         }
         if (data.ip) {
-          html += "ip: " + data.ip + "<br/>";
+          html += "Ip: " + data.ip + "<br/>";
         }
         if (data.token) {
-          html += "token: " + data.token + "<br/>";
+          html += "Token: " + data.token + "<br/>";
         }
         if (data.owns) {
           html += "Owns: " + data.owns + "<br/>";
         }
         if (data.state) {
           html += "State: " + data.state + "<br/>";
+        }
+        if (data.status) {
+          html += "Status: " + data.status + "<br/>";
         }
         if (data.load) {
           html += "Load: " + data.load + "<br/>";

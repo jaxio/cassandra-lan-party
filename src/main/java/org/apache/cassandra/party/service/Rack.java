@@ -24,7 +24,7 @@ public class Rack {
             this.parent = parent;
         }
 
-        public int getNbMachines() {
+        public int getNbNodes() {
             return parent.children.size();
         }
     }
