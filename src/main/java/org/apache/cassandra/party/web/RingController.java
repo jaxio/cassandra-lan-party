@@ -9,8 +9,6 @@ package org.apache.cassandra.party.web;
 
 import java.util.List;
 
-import org.apache.cassandra.party.service.NodeInfo;
-import org.apache.cassandra.party.service.RingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
