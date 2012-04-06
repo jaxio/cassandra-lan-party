@@ -36,6 +36,6 @@ public class RingController {
         model.addAttribute("nodeInfos", infos);
         
         return "ring"; // todo
-    }
+    }    
 }
 
