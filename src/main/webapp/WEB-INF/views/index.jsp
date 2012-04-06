@@ -29,7 +29,8 @@
 						<th>IP</th>
 						<th>DC</th>
 						<th>RACK</th>
-						<th>Token</th>
+						<td>index</td>
+						<th>TOKEN (copy-paste yours)</th>
 					</tr>
 				 </thead>
 				 <tbody>
@@ -38,6 +39,7 @@
 							<td><spring:eval expression="participant.ip" /></td>
 							<td><spring:eval expression="dataCenter.name" /></td>
 							<td><spring:eval expression="participant.rack" /></td>
+							<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
 							<td>
 								<c:if test="${participant.currentUser}">
 									<strong>
