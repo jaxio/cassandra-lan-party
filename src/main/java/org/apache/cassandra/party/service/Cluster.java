@@ -12,9 +12,9 @@ public class Cluster {
     public String name = "Cluster " + new Date();
     public ClusterData data = new ClusterData();
 
-    public DataCenter getDc(String id) {
+    public DataCenter getDc(String name) {
         for (DataCenter dc : children) {
-            if (dc.id.equals(id)) {
+            if (dc.name.equals(name)) {
                 return dc;
             }
         }

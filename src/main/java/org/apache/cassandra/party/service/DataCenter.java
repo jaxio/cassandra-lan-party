@@ -15,9 +15,9 @@ public class DataCenter {
         this.name = node.dc; // todo city name
     }
 
-    public Rack getRack(String id) {
+    public Rack getRack(String name) {
         for (Rack rack : children) {
-            if (rack.id.equals(id)) {
+            if (rack.name.equals(name)) {
                 return rack;
             }
         }
