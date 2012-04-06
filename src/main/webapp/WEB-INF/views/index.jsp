@@ -6,12 +6,7 @@
 
 <html>
 <head>
-<link href="/res/css/bootstrap.min.css" rel="stylesheet">
- <STYLE type="text/css">
-   .dc1 { background-color: lightblue } 
-   .dc2 { background-color: yellow } 
-   .dc3 { background-color: pink } 
- </STYLE>
+	<link href="<%=request.getContextPath() %>/res/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 	<div class="container">
@@ -24,7 +19,7 @@
 	
 		<c:forEach items="${dataCenters}" var="dataCenter" varStatus="_st">
 		<div class="alert alert-info">Data Center : <strong><spring:eval expression="dataCenter.name" /></strong></div>
-		<table class="table table-striped">
+		<table class="table table-striped table-bordered table-condensed">
 			 <thead>
 			 	<tr>
 					<th>IP</th>
@@ -39,8 +34,20 @@
 						<td><spring:eval expression="participant.ip" /></td>
 						<td><spring:eval expression="dataCenter.name" /></td>
 						<td><spring:eval expression="participant.rack" /></td>
-						<td><spring:eval expression="participant.token" /></td>
+						<td>
+							<c:if test="${participant.currentUser}">
+							<strong>
+							</c:if>
+							
+							<spring:eval expression="participant.token" />
+								
+							<c:if test="${participant.currentUser}">
+							</strong>
+								<span class="label label-success">Your token!</span>
+							</c:if>
+						</td>
 					</tr>
+					
 				</c:forEach>
 			</tbody>
 		</table>

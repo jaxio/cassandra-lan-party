@@ -43,7 +43,7 @@ public class IndexController {
 			for (Participant participant : datacenter.getParticipants()) {
 				System.out.println(participant);
 				if (participant.getIp().equals(("" + req.getRemoteAddr()).trim())) {
-					participant.currentUser = true;
+					participant.setCurrentUser(true);
 					break;
 				}
 			}

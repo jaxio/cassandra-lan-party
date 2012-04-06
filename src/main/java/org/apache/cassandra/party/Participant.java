@@ -2,7 +2,7 @@ package org.apache.cassandra.party;
 
 public class Participant {
     
-    public boolean currentUser = false;
+    private boolean currentUser = false;
     
     public int dc = -1;
     public int rack = -1;
@@ -24,4 +24,12 @@ public class Participant {
     public String toString() {
         return getIp() +"=DC" + dc + ":RACK" + rack + " ("+ nodeIndexInDataCenter + ") initial_token=" + token;
     }
+
+	public boolean isCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(boolean currentUser) {
+		this.currentUser = currentUser;
+	}
 }
