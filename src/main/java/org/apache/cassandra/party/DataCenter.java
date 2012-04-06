@@ -1,45 +1,30 @@
 package org.apache.cassandra.party;
 
-import java.util.ArrayList;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class DataCenter {
+    private int number = -1;
+    private List<Participant> participants = newArrayList();
 
-	private int number = -1;
+    public DataCenter(int number) {
+        this.number = number;
+    }
 
-	private List<Participant> participants = new ArrayList<Participant>();
-
-	public DataCenter(int number) {
-		this.setNumber(number);
-	}
-
-	public String getName() {
-		switch (getNumber()) {
-		case 1:
-			return "Lille";
-		case 2:
-			return "Paris";
-		case 3:
-			return "Ajaccio";
-		default:
-			throw new IllegalStateException("ooohh");
-		}
-	}
-
-	public List<Participant> getParticipants() {
-		return participants;
-	}
-
-	public void setParticipants(List<Participant> participants) {
-		this.participants = participants;
-	}
-
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
-	}
-
+    public String getName() {
+        switch (number) {
+        case 1:
+            return "Lille";
+        case 2:
+            return "Paris";
+        case 3:
+            return "Ajaccio";
+        default:
+            throw new IllegalStateException("Unknown datacenter " + number);
+        }
+    }
 }

@@ -1,26 +1,31 @@
 package org.apache.cassandra.party.service;
 
-import java.util.ArrayList;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.UUID.randomUUID;
+
 import java.util.List;
 
 public class Rack {
-
-    public String id;
+    public String id = randomUUID().toString();;
     public String name;
     public RackData data = new RackData(this);
-    public List<Host> children = new ArrayList<Host>();
-    
+    public List<Host> children = newArrayList();
+
+    public Rack(NodeInfo node) {
+        this.name = "Rack " + node.rack;
+    }
+
     public static class RackData {
-        private Rack parent; 
+        private final Rack parent;
+        public int $area = 1;
+        public String $color = "#D9EDF7";
+
         public RackData(Rack parent) {
             this.parent = parent;
         }
-        
-        public String get$NbMachines() {
-            return ""+parent.children.size();
-        }
-        public String color;
-        public int area;
-    }
 
+        public int getNbMachines() {
+            return parent.children.size();
+        }
+    }
 }

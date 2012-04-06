@@ -1,54 +1,51 @@
 package org.apache.cassandra.party.service;
 
-import java.util.ArrayList;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.UUID.randomUUID;
+
+import java.util.Date;
 import java.util.List;
 
-public class Cluster {    
-    public List<Dc> children = new ArrayList<Dc>();
-    
-    public Dc getDc(String id) {        
-        for (Dc dc : children) {
+public class Cluster {
+    public List<DataCenter> children = newArrayList();
+    public String id = randomUUID().toString();;
+    public String name = "Cluster " + new Date();
+    public ClusterData data = new ClusterData();
+
+    public DataCenter getDc(String id) {
+        for (DataCenter dc : children) {
             if (dc.id.equals(id)) {
                 return dc;
             }
-        }        
+        }
         return null;
     }
-    
+
+    public static class ClusterData {
+        public int $area = 1;
+        public String $color = "#2d6987";
+    }
+
     public static Cluster buildCluster(List<NodeInfo> nodes) {
         Cluster cluster = new Cluster();
-        
+
         for (NodeInfo node : nodes) {
-            Dc dc = cluster.getDc(node.dc);
-            
+            DataCenter dc = cluster.getDc(node.dc);
+
             if (dc == null) {
-                dc = new Dc();
-                dc.id = node.dc;
-                dc.name = node.dc; // todo city name
-                dc.data.area = 1; // todo ?
-                dc.data.$color = "yellow"; // todo ?
+                dc = new DataCenter(node);
                 cluster.children.add(dc);
             }
-            
+
             Rack rack = dc.getRack(node.rack);
-            
+
             if (rack == null) {
-                rack = new Rack();
-                rack.id = node.rack;
-                rack.name = "Rack " + node.rack;
-                rack.data.area = 1; // todo ?
-                rack.data.color = "blue"; // todo ?
+                rack = new Rack(node);
                 dc.children.add(rack);
             }
-            
-            Host h = new Host();
-            h.id = node.ip;
-            h.name = node.ip;
-            h.data = node;
-            h.data.color = node.state.equals("Up") ? "green" : "red";
-            rack.children.add(h);
+            rack.children.add(new Host(node));
         }
-        
+
         return cluster;
     }
 }

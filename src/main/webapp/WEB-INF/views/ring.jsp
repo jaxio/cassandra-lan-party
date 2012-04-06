@@ -10,14 +10,14 @@
 	
 	<table border="1">
 		<tr>
-    <th>ip</th>
-    <th>dc</th>
-    <th>rack</th>
-    <th>status</th>
-    <th>state</th>
-    <th>load</th>
-    <th>owns</th>
-    <th>token</th>
+			<th>ip</th>
+			<th>dc</th>
+			<th>rack</th>
+			<th>status</th>
+			<th>state</th>
+			<th>load</th>
+			<th>owns</th>
+			<th>token</th>
 		</tr>
 		<c:forEach items="${nodeInfos}" var="node">
 			<tr>
@@ -33,7 +33,5 @@
 		</c:forEach>
 	</table>
 </body>
-
-
 
 </html>
