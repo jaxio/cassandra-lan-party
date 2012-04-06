@@ -44,14 +44,10 @@ public class Cluster {
             Host h = new Host();
             h.id = node.ip;
             h.name = node.ip;
-            h.data.color = node.state.equals("Up") ? "green" : "red";
             h.data = node;
-            
+            h.data.color = node.state.equals("Up") ? "green" : "red";
             rack.children.add(h);
         }
-        
-        
-        
         
         return cluster;
     }
