@@ -44,46 +44,50 @@ public class RingService {
             NodeInfo nodeInfo = new NodeInfo();
             results.add(nodeInfo);
             
-            nodeInfo.token = token.toString();
-            
+            nodeInfo.token = token.toString();            
             nodeInfo.ip = tokenToEndpoint.get(token);
             
-            try
-            {
+            try {
                 nodeInfo.dc = probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip);
-            }
-            catch (UnknownHostException e)
-            {
+            } catch (UnknownHostException e) {
                 nodeInfo.dc = "Unknown";
             }
-            try
-            {
+            
+            try {
                 nodeInfo.rack = probe.getEndpointSnitchInfoProxy().getRack(nodeInfo.ip);
-            }
-            catch (UnknownHostException e)
-            {
+            } catch (UnknownHostException e) {
                 nodeInfo.rack = "Unknown";
             }
-            nodeInfo.status= liveNodes.contains(nodeInfo.ip)
-                            ? "Up"
-                            : deadNodes.contains(nodeInfo.ip)
-                              ? "Down"
-                              : "?";
+            
+            // status
+            if (liveNodes.contains(nodeInfo.ip)) {
+                nodeInfo.status = "Up";
+            } else if(deadNodes.contains(nodeInfo.ip)) {
+                nodeInfo.status = "Down";
+            } else {
+                nodeInfo.status = "?";
+            }
 
             
+            // state
             nodeInfo.state = "Normal";
-
-            if (joiningNodes.contains(nodeInfo.ip))
+            if (joiningNodes.contains(nodeInfo.ip)) {
                 nodeInfo.state = "Joining";
-            else if (leavingNodes.contains(nodeInfo.ip))
+            } else if (leavingNodes.contains(nodeInfo.ip)) {
                 nodeInfo.state = "Leaving";
-            else if (movingNodes.contains(nodeInfo.ip))
+            } else if (movingNodes.contains(nodeInfo.ip)) {
                 nodeInfo.state = "Moving";
+            }
 
-            nodeInfo.load = loadMap.containsKey(nodeInfo.ip) ? loadMap.get(nodeInfo.ip) : "?";
+            // load
+            if (loadMap.containsKey(nodeInfo.ip)) {
+                nodeInfo.load = loadMap.get(nodeInfo.ip);
+            } else {
+                nodeInfo.load = "?";
+            }
+            
+            // owns
             nodeInfo.owns= new DecimalFormat("##0.00%").format(ownerships.get(token) == null ? 0.0F : ownerships.get(token));
-            
-            
         }
         
         return results;
