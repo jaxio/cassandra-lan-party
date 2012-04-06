@@ -12,7 +12,7 @@ public class Rack {
     public List<Host> children = newArrayList();
 
     public Rack(NodeInfo node) {
-        this.name = "Rack " + node.rack;
+        this.name = node.rack;
     }
 
     public static class RackData {
