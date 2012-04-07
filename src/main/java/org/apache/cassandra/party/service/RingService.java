@@ -9,6 +9,7 @@ import static org.apache.cassandra.party.service.NodeInfo.NodeStatus.down;
 import static org.apache.cassandra.party.service.NodeInfo.NodeStatus.unknown;
 import static org.apache.cassandra.party.service.NodeInfo.NodeStatus.up;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -25,28 +26,39 @@ public class RingService {
 
     private NodeProbe probe;
 
-    public RingService() throws Exception {
-        probe = new NodeProbe("127.0.0.1");
+    public RingService() {
+    	try {
+			probe = new NodeProbe("127.0.0.1");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @SuppressWarnings("rawtypes")
     public List<NodeInfo> loadNodeInfos(String keyspace) {
-        Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
-        List<NodeInfo> results = newArrayList();
-
-        for (Token token : newArrayList(tokenToEndpoint.keySet())) {
-            NodeInfo nodeInfo = new NodeInfo();
-            nodeInfo.token = token.toString();
-            nodeInfo.ip = tokenToEndpoint.get(token);
-            nodeInfo.dc = getDc(nodeInfo);
-            nodeInfo.rack = getRack(nodeInfo);
-            nodeInfo.status = getStatus(nodeInfo);
-            nodeInfo.state = getState(nodeInfo);
-            nodeInfo.load = getLoad(nodeInfo);
-            nodeInfo.owns = getOwns(token);
-
-            results.add(nodeInfo);
-        }
+    	List<NodeInfo> results = newArrayList();
+    	if (probe != null) {
+    		
+    		Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
+    		
+    		for (Token token : newArrayList(tokenToEndpoint.keySet())) {
+    			NodeInfo nodeInfo = new NodeInfo();
+    			nodeInfo.token = token.toString();
+    			nodeInfo.ip = tokenToEndpoint.get(token);
+    			nodeInfo.dc = getDc(nodeInfo);
+    			nodeInfo.rack = getRack(nodeInfo);
+    			nodeInfo.status = getStatus(nodeInfo);
+    			nodeInfo.state = getState(nodeInfo);
+    			nodeInfo.load = getLoad(nodeInfo);
+    			nodeInfo.owns = getOwns(token);
+    			
+    			results.add(nodeInfo);
+    		}
+    	}
 
         return results;
     }
