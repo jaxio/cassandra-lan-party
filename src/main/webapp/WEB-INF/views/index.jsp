@@ -16,7 +16,8 @@
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
 			<p>
-				${nbDataCenter} Data Center, ${nbRackPerDataCenter} Racks per Data Center, ${nbParticipantPerRack} Participants per rack </span>
+				${nbDataCenter} Data Center, ${nbRackPerDataCenter} Racks per Data Center, ${nbParticipantPerRack} Participants per rack.<br/>
+				Current Ip : ${currentIp}
 			</p>
 			<p><a class="btn btn-primary btn-large" href="#cluster">Live visualization</a></p>
 		</div>
@@ -39,7 +40,10 @@
 							<td><spring:eval expression="participant.ip" /></td>
 							<td><spring:eval expression="participant.rack" /></td>
 							<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
-							<td><code><spring:eval expression="participant.token" /></code><c:if test="${participant.currentUser}"><span class="label label-success">yours</span></c:if></td>
+							<td>
+								<code><spring:eval expression="participant.token" /></code>
+								<c:if test="${participant.ip eq currentIp}">&larr; <span class="label label-success">yours</span></c:if>
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>

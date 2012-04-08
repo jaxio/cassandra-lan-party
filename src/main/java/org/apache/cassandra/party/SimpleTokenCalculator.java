@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class SimpleTokenCalculator {
 
-    public static List<DataCenter> calculate(int nbDataCenter, int nbRackPerDataCenter, int nbParticipantPerRack) {
+    public static List<DataCenter> buildDataCenters(int nbDataCenter, int nbRackPerDataCenter, int nbParticipantPerRack) {
         List<DataCenter> dataCenters = newArrayList();
 
         int nbParticipantPerDataCenter = nbRackPerDataCenter * nbParticipantPerRack;
