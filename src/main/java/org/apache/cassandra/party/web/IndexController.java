@@ -1,32 +1,37 @@
 package org.apache.cassandra.party.web;
 
 import static org.apache.cassandra.party.SimpleTokenCalculator.buildDataCenters;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import javax.servlet.ServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
-    @RequestMapping("/")
-    public String indexEmpty() {
-        return "redirect:/index";
+    @RequestMapping("/index")
+    public ModelAndView index( //
+            @RequestParam(value = "nbDataCenter", defaultValue = "4") int nbDataCenter, //
+            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
+            @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack, //
+            ServletRequest req) {
+        return new ModelAndView("index") //
+                .addObject("currentIp", req.getRemoteAddr()) //
+                .addObject("nbDataCenter", nbDataCenter) //
+                .addObject("nbRackPerDataCenter", nbRackPerDataCenter) //
+                .addObject("nbParticipantPerRack", nbParticipantPerRack) //
+                .addObject("dataCenters", buildDataCenters(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack));
     }
 
-    @RequestMapping("/index")
-    public ModelAndView index(ServletRequest req) {
-        int nbDataCenter = 3;
-        int nbRackPerDataCenter = 2;
-        int nbParticipantPerRack = 8;
-
-        ModelAndView model = new ModelAndView("index");
-        model.addObject("currentIp", req.getRemoteAddr());
-        model.addObject("nbDataCenter", nbDataCenter);
-        model.addObject("nbRackPerDataCenter", nbRackPerDataCenter);
-        model.addObject("nbParticipantPerRack", nbParticipantPerRack);
-        model.addObject("dataCenters", buildDataCenters(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack));
-        return model;
+    @ExceptionHandler
+    @ResponseStatus(BAD_REQUEST)
+    public ModelAndView exception(Exception e) {
+        return new ModelAndView("error") //
+                .addObject("error", e.getMessage());
     }
 }

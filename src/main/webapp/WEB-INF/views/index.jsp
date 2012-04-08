@@ -19,7 +19,10 @@
 				${nbDataCenter} Data Center, ${nbRackPerDataCenter} Racks per Data Center, ${nbParticipantPerRack} Participants per rack.<br/>
 				Current Ip : ${currentIp}
 			</p>
-			<p><a class="btn btn-primary btn-large" href="#cluster">Live visualization</a></p>
+			<p>
+			  	<button class="btn btn-primary btn-large" data-toggle="modal" href="#partySetup">Party setup</button>
+				<a class="btn btn-primary btn-large" href="#cluster">Live visualization</a>
+			</p>
 		</div>
 		<c:forEach items="${dataCenters}" var="dataCenter">
 			<div class="page-header">
@@ -104,6 +107,40 @@
 			<a href="#" data-dismiss="modal" class="btn">Close</a>
 			<a id="updateProbe" class="btn btn-primary">Update</a>
 		</div>
+	</div>		
+	<div class="modal hide fade" id="partySetup">
+		<form action="<%=request.getContextPath() %>/clp/index">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Party setup</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+		    		<div class="control-group">
+						<label class="control-label" for="nbDataCenter">Number of data centers</label>
+		  				<div class="controls">
+		    				<input type="text" class="input" id="nbDataCenter" name="nbDataCenter" placeholder="3" value="3">
+		  				</div>
+		     		</div>
+				    <div class="control-group">
+		      			<label class="control-label" for="nbRackPerDataCenter">Number of rack <strong>per</strong> data center</label>
+		      			<div class="controls">
+		        			<input type="text" class="input" id="nbRackPerDataCenter" name="nbRackPerDataCenter" placeholder="2" value="2">
+		      			</div>
+		      		</div>
+		    		<div class="control-group">
+		      			<label class="control-label" for="nbParticipantPerRack">Number of participant <strong>per</strong> rack</label>
+		      			<div class="controls">
+		        			<input type="text" class="input" id="nbParticipantPerRack" name="nbParticipantPerRack" placeholder="4" value="4">
+		      			</div>
+		      		</div>
+		  		</fieldset>
+			</div>
+			<div class="modal-footer">
+				<a href="#" data-dismiss="modal" class="btn">Close</a>
+				<button type="subtmi" id="updateProbe" class="btn btn-primary">Update</button>
+			</div>
+		</form>
 	</div>			
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/bootstrap.js" language="javascript" type="text/javascript"></script>
