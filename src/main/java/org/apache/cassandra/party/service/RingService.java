@@ -24,56 +24,52 @@ import org.springframework.stereotype.Service;
 @Service
 public class RingService {
 
-    private NodeProbe probe;
-
-    private String host;
-
-    private RingService() {
-        updateProbe("127.0.0.1");
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void updateProbe(String newHost) {
-        if (host == null || !host.equalsIgnoreCase(newHost)) {
-            host = newHost;
-            try {
-                probe = new NodeProbe(host);
-                System.out.println("Probe " + host);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
     @SuppressWarnings("rawtypes")
-    public List<NodeInfo> loadNodeInfos(String keyspace) {
-        if (probe == null) {
-            return newArrayList();
-        }
-        List<NodeInfo> results = newArrayList();
-        Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
-        for (Token token : newArrayList(tokenToEndpoint.keySet())) {
-            NodeInfo nodeInfo = new NodeInfo();
-            nodeInfo.token = token.toString();
-            nodeInfo.ip = tokenToEndpoint.get(token);
-            nodeInfo.dc = getDc(nodeInfo);
-            nodeInfo.rack = getRack(nodeInfo);
-            nodeInfo.status = getStatus(nodeInfo);
-            nodeInfo.state = getState(nodeInfo);
-            nodeInfo.load = getLoad(nodeInfo);
-            nodeInfo.owns = getOwns(token);
+    public List<NodeInfo> loadNodeInfos(String host, String keyspace) {
+        NodeProbe probe = null;
+        try {
+            probe = getProbe(host);
+            List<NodeInfo> results = newArrayList();
+            Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
+            for (Token token : newArrayList(tokenToEndpoint.keySet())) {
+                NodeInfo nodeInfo = new NodeInfo();
+                nodeInfo.token = token.toString();
+                nodeInfo.ip = tokenToEndpoint.get(token);
+                nodeInfo.dc = getDc(probe, nodeInfo);
+                nodeInfo.rack = getRack(probe, nodeInfo);
+                nodeInfo.status = getStatus(probe, nodeInfo);
+                nodeInfo.state = getState(probe, nodeInfo);
+                nodeInfo.load = getLoad(probe, nodeInfo);
+                nodeInfo.owns = getOwns(probe, token);
 
-            results.add(nodeInfo);
+                results.add(nodeInfo);
+            }
+            return results;
+        } finally {
+            closeProbe(probe);
         }
-        return results;
     }
 
-    private String getDc(NodeInfo nodeInfo) {
+    private NodeProbe getProbe(String host) {
+        try {
+            return new NodeProbe(host);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeProbe(NodeProbe probe) {
+        try {
+            if (probe != null) {
+                probe.close();
+            }
+        } catch (IOException ignore) {
+        }
+    }
+
+    private String getDc(NodeProbe probe, NodeInfo nodeInfo) {
         try {
             return probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip);
         } catch (UnknownHostException e) {
@@ -81,7 +77,7 @@ public class RingService {
         }
     }
 
-    private String getRack(NodeInfo nodeInfo) {
+    private String getRack(NodeProbe probe, NodeInfo nodeInfo) {
         try {
             return probe.getEndpointSnitchInfoProxy().getRack(nodeInfo.ip);
         } catch (UnknownHostException e) {
@@ -89,7 +85,7 @@ public class RingService {
         }
     }
 
-    private NodeStatus getStatus(NodeInfo nodeInfo) {
+    private NodeStatus getStatus(NodeProbe probe, NodeInfo nodeInfo) {
         if (probe.getLiveNodes().contains(nodeInfo.ip)) {
             return up;
         } else if (probe.getUnreachableNodes().contains(nodeInfo.ip)) {
@@ -99,7 +95,7 @@ public class RingService {
         }
     }
 
-    private NodeState getState(NodeInfo nodeInfo) {
+    private NodeState getState(NodeProbe probe, NodeInfo nodeInfo) {
         if (probe.getJoiningNodes().contains(nodeInfo.ip)) {
             return joining;
         } else if (probe.getLeavingNodes().contains(nodeInfo.ip)) {
@@ -111,7 +107,7 @@ public class RingService {
         }
     }
 
-    private String getLoad(NodeInfo nodeInfo) {
+    private String getLoad(NodeProbe probe, NodeInfo nodeInfo) {
         if (probe.getLoadMap().containsKey(nodeInfo.ip)) {
             return probe.getLoadMap().get(nodeInfo.ip);
         } else {
@@ -120,7 +116,7 @@ public class RingService {
     }
 
     @SuppressWarnings("rawtypes")
-    private String getOwns(Token token) {
+    private String getOwns(NodeProbe probe, Token token) {
         Map<Token, Float> ownerships = probe.getOwnership();
         return new DecimalFormat("##0.00%").format(ownerships.get(token) == null ? 0.0F : ownerships.get(token));
     }

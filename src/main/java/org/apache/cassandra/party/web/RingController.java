@@ -22,22 +22,22 @@ public class RingController {
 
     @RequestMapping(value = "/rest/ring", method = GET, produces = "application/json")
     @ResponseBody
-    public Cluster jsonRing() {
-        return buildCluster(ringService.loadNodeInfos("ks"));
+    public Cluster ring(@RequestParam(defaultValue = "127.0.0.1") String probeHost) {
+        return buildCluster(ringService.loadNodeInfos(probeHost, "ks"));
     }
 
-    @RequestMapping(value = "/rest/updateProbe", method = GET, produces = "application/json")
+    @RequestMapping(value = "/rest/checkProbe", method = GET, produces = "application/json")
     @ResponseBody
-    public String updateProbe(@RequestParam String probeHost) {
-        ringService.updateProbe(probeHost);
-        ringService.loadNodeInfos("ks");
-        return "{\"host\":\"" + ringService.getHost() + "\"}";
+    public String checkProbe(@RequestParam String probeHost) {
+        ringService.loadNodeInfos(probeHost, "ks");
+        return "{\"message\":\"ok\"}";
     }
 
     @ExceptionHandler
     @ResponseBody
     @ResponseStatus(BAD_REQUEST)
     public String exception(Exception e) {
+        e.printStackTrace();
         return "{\"error\":\"" + e.getMessage() + "\"}";
     }
 }
