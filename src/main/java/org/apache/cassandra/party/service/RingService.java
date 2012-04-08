@@ -26,40 +26,50 @@ public class RingService {
 
     private NodeProbe probe;
 
-    public RingService() {
-    	try {
-			probe = new NodeProbe("127.0.0.1");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    private String host;
+
+    private RingService() {
+        updateProbe("127.0.0.1");
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void updateProbe(String newHost) {
+        if (host == null || !host.equalsIgnoreCase(newHost)) {
+            host = newHost;
+            try {
+                probe = new NodeProbe(host);
+                System.out.println("Probe " + host);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @SuppressWarnings("rawtypes")
     public List<NodeInfo> loadNodeInfos(String keyspace) {
-    	List<NodeInfo> results = newArrayList();
-    	if (probe != null) {
-    		
-    		Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
-    		
-    		for (Token token : newArrayList(tokenToEndpoint.keySet())) {
-    			NodeInfo nodeInfo = new NodeInfo();
-    			nodeInfo.token = token.toString();
-    			nodeInfo.ip = tokenToEndpoint.get(token);
-    			nodeInfo.dc = getDc(nodeInfo);
-    			nodeInfo.rack = getRack(nodeInfo);
-    			nodeInfo.status = getStatus(nodeInfo);
-    			nodeInfo.state = getState(nodeInfo);
-    			nodeInfo.load = getLoad(nodeInfo);
-    			nodeInfo.owns = getOwns(token);
-    			
-    			results.add(nodeInfo);
-    		}
-    	}
+        if (probe == null) {
+            return newArrayList();
+        }
+        List<NodeInfo> results = newArrayList();
+        Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
+        for (Token token : newArrayList(tokenToEndpoint.keySet())) {
+            NodeInfo nodeInfo = new NodeInfo();
+            nodeInfo.token = token.toString();
+            nodeInfo.ip = tokenToEndpoint.get(token);
+            nodeInfo.dc = getDc(nodeInfo);
+            nodeInfo.rack = getRack(nodeInfo);
+            nodeInfo.status = getStatus(nodeInfo);
+            nodeInfo.state = getState(nodeInfo);
+            nodeInfo.load = getLoad(nodeInfo);
+            nodeInfo.owns = getOwns(token);
 
+            results.add(nodeInfo);
+        }
         return results;
     }
 

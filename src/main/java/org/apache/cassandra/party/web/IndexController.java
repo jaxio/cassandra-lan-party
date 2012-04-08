@@ -13,38 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
-	@RequestMapping("/")
-	public String indexEmpty() {
-		return "redirect:/index";
-	}
+    @RequestMapping("/")
+    public String indexEmpty() {
+        return "redirect:/index";
+    }
 
-	@RequestMapping("/index")
-	public String index(Model model, ServletRequest req) {
-		int nbDataCenter = 3;
-		int nbRackPerDataCenter = 2;
-		int nbParticipantPerRack = 8;
+    @RequestMapping("/index")
+    public String index(Model model, ServletRequest req) {
+        int nbDataCenter = 3;
+        int nbRackPerDataCenter = 2;
+        int nbParticipantPerRack = 8;
 
-		model.addAttribute("nbDataCenter", nbDataCenter);
-		model.addAttribute("nbRackPerDataCenter", nbRackPerDataCenter);
-		model.addAttribute("nbParticipantPerRack", nbParticipantPerRack);
+        model.addAttribute("nbDataCenter", nbDataCenter);
+        model.addAttribute("nbRackPerDataCenter", nbRackPerDataCenter);
+        model.addAttribute("nbParticipantPerRack", nbParticipantPerRack);
 
-		List<DataCenter> dataCenters = SimpleTokenCalculator.calculate(nbDataCenter, nbRackPerDataCenter,
-				nbParticipantPerRack);
+        List<DataCenter> dataCenters = SimpleTokenCalculator.calculate(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack);
 
-		for (DataCenter datacenter : dataCenters) {
-			System.out.println(datacenter.getName());
-			for (Participant participant : datacenter.getParticipants()) {
-				System.out.println(participant);
-				if (participant.getIp().equals(("" + req.getRemoteAddr()).trim())) {
-					participant.setCurrentUser(true);
-					break;
-				}
-			}
+        for (DataCenter datacenter : dataCenters) {
+            System.out.println(datacenter.getName());
+            for (Participant participant : datacenter.getParticipants()) {
+                System.out.println(participant);
+                if (participant.getIp().equals(("" + req.getRemoteAddr()).trim())) {
+                    participant.setCurrentUser(true);
+                    break;
+                }
+            }
 
-		}
+        }
 
-		model.addAttribute("dataCenters", dataCenters);
+        model.addAttribute("dataCenters", dataCenters);
 
-		return "index";
-	}
+        return "index";
+    }
 }
