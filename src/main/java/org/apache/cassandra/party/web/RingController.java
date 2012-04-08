@@ -29,7 +29,7 @@ public class RingController {
 
     @RequestMapping("/ring")
     public String ring(Model model) {
-        List<NodeInfo> infos = ringService.loadNodeInfos("ks"); // TODO
+        List<NodeInfo> infos = ringService.loadNodeInfos("127.0.0.1", "ks"); // TODO
         for (NodeInfo ni : infos) {
             System.out.println(ni);
         }
@@ -40,7 +40,7 @@ public class RingController {
     @RequestMapping(value = "/rest/ring", method = GET, produces = "application/json")
     @ResponseBody
     public Cluster ring() {
-        List<NodeInfo> infos = ringService.loadNodeInfos("ks"); // TODO
+        List<NodeInfo> infos = ringService.loadNodeInfos("127.0.0.1", "ks"); // TODO
         for (NodeInfo ni : infos) {
             System.out.println(ni);
         }
