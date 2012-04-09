@@ -18,7 +18,7 @@
 			<h3>Devoxx fr 2012</h3>
 			<p>
 				<a class="btn btn-primary" href="<%=request.getContextPath() %>/clp/index"><i class="icon-home icon-white"></i> Home</a>
-				<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Configure party</button>
+				<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
 			</p>
 		</div>
 
