@@ -18,7 +18,7 @@
 			<h3>Devoxx fr 2012</h3>
 			<p>
 				<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partySetup"><i class="icon-edit icon-white"></i> Party setup</button>
-				<button class="btn btn-primary" data-toggle="modal" href="#nodeHost"><i class="icon-pencil icon-white"></i> Change node host</button>
+				<button class="btn btn-primary" data-toggle="modal" href="#nodeHost"><i class="icon-refresh icon-white"></i> Change node host</button>
 				<button class="btn btn-primary" id="autoRefresh"><i class="icon-repeat icon-white"></i> Auto-refresh enabled</button>
 			</p>
 		</div>
