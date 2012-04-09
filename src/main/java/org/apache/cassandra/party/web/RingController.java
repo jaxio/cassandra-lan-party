@@ -4,7 +4,10 @@ import static org.apache.cassandra.party.service.Cluster.buildCluster;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import java.util.List;
+
 import org.apache.cassandra.party.service.Cluster;
+import org.apache.cassandra.party.service.NodeInfo;
 import org.apache.cassandra.party.service.RingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +25,13 @@ public class RingController {
 
     @RequestMapping(value = "/rest/ring", method = GET, produces = "application/json")
     @ResponseBody
-    public Cluster ring(@RequestParam(defaultValue = "127.0.0.1") String probeHost) {
+    public List<NodeInfo> ring(@RequestParam(defaultValue = "127.0.0.1") String probeHost) {
+        return ringService.loadNodeInfos(probeHost, "ks");
+    }
+
+    @RequestMapping(value = "/rest/treemap", method = GET, produces = "application/json")
+    @ResponseBody
+    public Cluster treemap(@RequestParam(defaultValue = "127.0.0.1") String probeHost) {
         return buildCluster(ringService.loadNodeInfos(probeHost, "ks"));
     }
 

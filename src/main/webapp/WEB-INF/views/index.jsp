@@ -32,7 +32,7 @@
 			<table class="table table-striped table-bordered table-condensed">
 				 <thead>
 				 	<tr>
-						<th>Io</th>
+						<th>Ip</th>
 						<th>Rack</th>
 						<th>Index</th>
 						<th>Token</th>
@@ -54,6 +54,35 @@
 			</table>
 		</c:forEach>
 		
+		<div class="page-header">
+			<h1>Cassandra Ring <small>live!</small></h1>
+		</div>
+		<table class="table table-striped table-bordered table-condensed">
+			<thead>
+				<tr>
+		      		<th>ip</th>
+		      		<th>dc</th>
+		      		<th>rack</th>
+		      		<th>status</th>
+		      		<th>state</th>
+		      		<th>load</th>
+		      		<th>owns</th>
+		      		<th>token</th>
+		    	</tr>
+		    </thead>
+		    <tbody id="ring-table-body">
+		    	<tr>
+		      		<td>ip</td>
+		      		<td>dc</td>
+		      		<td>rack</td>
+		      		<td>status</td>
+		      		<td>state</td>
+		      		<td>load</td>
+		      		<td>owns</td>
+		      		<td>token</td>
+		      	</tr>
+		    </tbody>
+		</table>		
 		<a name="cluster"></a>
 		<div class="page-header">
 			<h1>Cluster visualization <small>live!</small></h1>
@@ -72,10 +101,11 @@
           		</ul>
         	</div>			
 		</div>
-		<div id="treemap">
+		<div id="infovis-container">
 			<div id="infovis"></div>
 		</div>
 	</div>
+	<!-- node host modal dialog -->
 	<div class="modal hide fade" id="nodeHost">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">×</a>
@@ -106,6 +136,7 @@
 			<a id="checkProbe" class="btn btn-primary">Update</a>
 		</div>
 	</div>		
+	<!-- party setup modal dialog -->
 	<div class="modal hide fade" id="partySetup">
 		<form action="<%=request.getContextPath() %>/clp/index">
 			<div class="modal-header">
@@ -139,7 +170,7 @@
 				<button type="subtmi" id="updateProbe" class="btn btn-primary">Check</button>
 			</div>
 		</form>
-	</div>			
+	</div>
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/bootstrap.js" language="javascript" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/jit.js" language="javascript" type="text/javascript"></script>
@@ -147,12 +178,29 @@
 	<script src="<%=request.getContextPath() %>/static/js/treemap.js" language="javascript" type="text/javascript"></script>
 </body>
 <script>
+	
+	// called when dom is complete
 	function loaded() {
-		refreshTreeMap();
+		setupAutoRefresh();
+		setupLiveUpdates();
+		setupProbeChecker();
+	}
+	
+	function setupLiveUpdates() {
+		liveUpdate();
+		// call live update every 3 seconds
+		setInterval(function() {
+			if (autoRefresh) { liveUpdate();}
+		}, 3000);
+	}
+	
+	function setupAutoRefresh() {
 		$("#autoRefresh").click(function() {
 			autoRefresh = !autoRefresh;
 		});
-		setInterval(function() {if (autoRefresh) { refreshTreeMap();}}, 3000);
+	}
+	
+	function setupProbeChecker() {
 		$("#checkProbe").click(function() {
 			var url = "<%=request.getContextPath() %>/clp/rest/checkProbe?probeHost=" + $("#probeHost").val(); 
 			$.getJSON(url)
@@ -160,10 +208,29 @@
 				.error(function() {$("#probeInvalid").show();});
 		});
 	}
-	function refreshTreeMap() {
-		$.getJSON("<%=request.getContextPath() %>/clp/rest/ring?probeHost=" + $("#probeHost").val(),"", function(json) { displayTreeMap(json);})
+	
+	function displayRingTable(json) {
+  			$("#ring-table-body").empty();
+			$.each(json, function(node, node) {
+				$("#ring-table-body").append(
+				+ "<tr>"
+				+ "<td>" + node.ip + "</td>" 
+				+ "<td>" + node.dc + "</td>" 
+				+ "<td>" + node.rack + "</td>" 
+				+ "<td>" + node.status + "</td>" 
+				+ "<td>" + node.state + "</td>" 
+				+ "<td>" + node.load + "</td>" 
+				+ "<td>" + node.owns + "</td>" 
+				+ "<td><code>" + node.token + "</code></td>" 
+				+ "</tr>");
+			});
+	}
+	
+	function liveUpdate() {
+		$.getJSON("<%=request.getContextPath() %>/clp/rest/treemap?probeHost=" + $("#probeHost").val(), function(json) { displayTreeMap(json);})
 			.error(function() {$("#infovis").html("An error occured while retrieving ring data");});
-		//displayTreeMap({"children":[{"id":"fb1bf9ef-150a-4d73-8f46-48df017a7b25","name":"datacenter1","data":{"$color":"#3A87AD","$area":1,"nbRacks":1},"children":[{"id":"2de843ee-8be0-478e-90e3-b70751f6bf39","name":"rack1","data":{"$area":1,"$color":"#D9EDF7","nbMachines":3},"children":[{"name":"127.0.0.1","id":"f2479620-7fc4-4d56-9cde-9175151b5b0c","data":{"ip":"127.0.0.1","dc":"datacenter1","rack":"rack1","status":"up","state":"normal","load":"122,72 KB","owns":"8,33%","token":"127605887595351923798765477786913079296","$area":8,"$color":"#5BB75B"}},{"name":"127.0.0.3","id":"01c5cc53-a7ec-4153-9f66-8d498258a162","data":{"ip":"127.0.0.3","dc":"datacenter1","rack":"rack1","status":"up","state":"normal","load":"135,59 KB","owns":"33,33%","token":"113427455640312814857969558651062452225","$area":33,"$color":"#5BB75B"}},{"name":"127.0.0.2","id":"0e597787-b4c7-4b74-b28a-49e62c65ef88","data":{"ip":"127.0.0.2","dc":"datacenter1","rack":"rack1","status":"down","state":"normal","load":"135,56 KB","owns":"58,33%","token":"56713727820156407428984779325531226112","$area":58,"$color":"#DA4F49"}}]}]}],"id":"7d467d99-5e18-4875-9a3c-39d7ae9fb347","name":"Cluster Sat Apr 07 00:25:02 CEST 2012","data":{"$area":1,"$color":"#2d6987"}});
+		$.getJSON("<%=request.getContextPath() %>/clp/rest/ring?probeHost=" + $("#probeHost").val(), "", function(json) { displayRingTable(json);})
+			.error(function() {$("#ring-table-body").html("An error occured while retrieving ring data");});
 	}
 </script>
 </html>
