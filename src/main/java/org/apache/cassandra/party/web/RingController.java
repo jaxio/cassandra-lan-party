@@ -30,22 +30,24 @@ public class RingController {
     @ResponseBody
     public List<NodeInfo> ring( //
             @RequestParam(defaultValue = "127.0.0.1") String probeHost, //
+            @RequestParam(defaultValue = "ks") String keyspace, //
             @RequestParam(defaultValue = "false") boolean debug) {
-        return nodeInfos(probeHost, debug);
+        return loadNodeInfos(probeHost, keyspace, debug);
     }
 
     @RequestMapping(value = "/rest/treemap", method = GET, produces = "application/json")
     @ResponseBody
     public Cluster treemap( //
             @RequestParam(defaultValue = "127.0.0.1") String probeHost, //
+            @RequestParam(defaultValue = "ks") String keyspace, //
             @RequestParam(defaultValue = "false") boolean debug) {
-        return buildCluster(nodeInfos(probeHost, debug));
+        return buildCluster(loadNodeInfos(probeHost, keyspace, debug));
     }
 
     @RequestMapping(value = "/rest/checkProbe", method = GET, produces = "application/json")
     @ResponseBody
-    public String checkProbe(@RequestParam String probeHost) {
-        ringService.loadNodeInfos(probeHost, "ks");
+    public String checkProbe(@RequestParam String probeHost, @RequestParam String keyspace) {
+        ringService.loadNodeInfos(probeHost, keyspace);
         return "{\"message\":\"ok\"}";
     }
 
@@ -57,9 +59,10 @@ public class RingController {
         return "{\"error\":\"" + e.getMessage() + "\"}";
     }
 
-    private List<NodeInfo> nodeInfos(String probeHost, boolean debug) {
+    private List<NodeInfo> loadNodeInfos(String probeHost, String keyspace, boolean debug) {
+        System.out.println("loading node infos from " + probeHost + " [" + keyspace + "]");
         if (!debug) {
-            return ringService.loadNodeInfos(probeHost, "ks");
+            return ringService.loadNodeInfos(probeHost, keyspace);
         }
         int maxDc = RandomUtils.nextInt(4) + 1;
         int maxRackPerDc = RandomUtils.nextInt(4) + 1;
