@@ -17,8 +17,6 @@
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
 			<p>
-				<button class="btn btn-primary" data-toggle="modal" href="#nodeHost"><i class="icon-refresh icon-white"></i> Change node host</button>
-				<button class="btn btn-primary" id="autoRefresh"><i class="icon-repeat icon-white"></i> Auto-refresh enabled</button>
 				<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/configuration"><i class="icon-edit icon-white"></i> Party setup</a>
 			</p>
 		</div>
@@ -37,6 +35,12 @@
 					<li><a id="r-st">Strip</a></li>
 					<li><a id="r-sd">Slide and Dice</a></li>
 				</ul>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-primary" data-toggle="modal" href="#nodeHost"><i class="icon-refresh icon-white"></i> Change node host</button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-primary" id="autoRefresh"><i class="icon-repeat icon-white"></i> Auto-refresh enabled</button>
 			</div>
 		</div>
 		<div id="infovis-container">
