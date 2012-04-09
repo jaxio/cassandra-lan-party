@@ -21,41 +21,51 @@
 			</p>
 			<p>
 			  	<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partySetup">Party setup</button>
-				<a class="btn btn-primary" href="#cluster">Live visualization</a>
 			  	<button class="btn btn-primary" data-toggle="modal" href="#nodeHost">Change node host</button>
+				<button class="btn btn-primary" id="autoRefresh">Auto-refresh enabled</button>
 			</p>
 		</div>
-		<c:forEach items="${dataCenters}" var="dataCenter">
-			<div class="page-header">
-				<h1><spring:eval expression="dataCenter.name" /> <small>data center</small></h1>
-			</div>
-			<table class="table table-striped table-bordered table-condensed">
-				 <thead>
-				 	<tr>
-						<th>Ip</th>
-						<th>Rack</th>
-						<th>Index</th>
-						<th>Token</th>
-					</tr>
-				 </thead>
-				 <tbody>
-					<c:forEach items="${dataCenter.participants}" var="participant">
-						<tr>
-							<td><spring:eval expression="participant.ip" /></td>
-							<td><spring:eval expression="participant.rack" /></td>
-							<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
-							<td>
-								<code><spring:eval expression="participant.token" /></code>
-								<c:if test="${participant.ip eq currentIp}">&larr; <span class="label label-success">yours</span></c:if>
-							</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-		</c:forEach>
 		
 		<div class="page-header">
-			<h1>Cassandra Ring <small>live!</small></h1>
+			<h1>Data Centers <small>Grab your token !</small></h1>
+		</div>
+		<ul class="nav nav-tabs">
+			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
+				<li${status.first ? ' class="active"' : ''}><a href="#<spring:eval expression="dataCenter.name" />" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
+			</c:forEach>
+		</ul>
+		<div class="tab-content">
+			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
+				<div class="tab-pane${status.first ? ' active' : ''}" id="<spring:eval expression="dataCenter.name" />">			
+					<table class="table table-striped table-bordered table-condensed">
+						 <thead>
+						 	<tr>
+								<th>Ip</th>
+								<th>Rack</th>
+								<th>Index</th>
+								<th>Token</th>
+							</tr>
+						 </thead>
+						 <tbody>
+							<c:forEach items="${dataCenter.participants}" var="participant">
+								<tr>
+									<td><spring:eval expression="participant.ip" /></td>
+									<td><spring:eval expression="participant.rack" /></td>
+									<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
+									<td>
+										<code><spring:eval expression="participant.token" /></code>
+										<c:if test="${participant.ip eq currentIp}">&larr; <span class="label label-success">yours</span></c:if>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+			</c:forEach>
+		</div>
+		
+		<div class="page-header">
+			<h1>Cassandra Ring <small>Live!</small></h1>
 		</div>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
@@ -85,12 +95,9 @@
 		</table>		
 		<a name="cluster"></a>
 		<div class="page-header">
-			<h1>Cluster visualization <small>live!</small></h1>
+			<h1>Cluster visualization <small>Live!</small></h1>
 		</div>
 		<div class="btn-toolbar">
-			<div class="btn-group">
-				<button id="autoRefresh" class="btn btn-primary" data-toggle="button" >Auto-refresh</button>
-			</div>
 			<div class="btn-group">
           		<button class="btn btn-info dropdown-toggle" data-toggle="dropdown">Visualization <span class="caret"></span></button>
 				<ul class="dropdown-menu">
@@ -133,7 +140,7 @@
 		</div>
 		<div class="modal-footer">
 			<a href="#" data-dismiss="modal" class="btn">Close</a>
-			<a id="checkProbe" class="btn btn-primary">Update</a>
+			<a id="checkProbe" class="btn btn-primary">Check</a>
 		</div>
 	</div>		
 	<!-- party setup modal dialog -->
@@ -189,6 +196,7 @@
 	function setupAutoRefresh() {
 		$("#autoRefresh").click(function() {
 			autoRefresh = !autoRefresh;
+			$("#autoRefresh").text(autoRefresh ? "Auto-refresh enabled" : "Auto-refresh disabled");
 		});
 	}
 
@@ -196,7 +204,7 @@
 		$("#checkProbe").click(function() {
 			$.getJSON(contextPath + "/clp/rest/checkProbe?probeHost=" + $("#probeHost").val())
 				.success(function() {$("#probeChanged").show();})
-				.error(function() {$("#probeInvalid").show();});
+				.error(function() {$("#probeHost").val("127.0.0.1"); $("#probeInvalid").show();});
 		});
 	}
 
