@@ -174,7 +174,7 @@
 			</div>
 			<div class="modal-footer">
 				<a href="#" data-dismiss="modal" class="btn">Close</a>
-				<button type="subtmi" id="updateProbe" class="btn btn-primary">Check</button>
+				<button type="subtmi" id="updateProbe" class="btn btn-primary">Generate</button>
 			</div>
 		</form>
 	</div>
