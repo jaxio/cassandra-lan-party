@@ -1,5 +1,6 @@
 package org.apache.cassandra.party;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
@@ -8,23 +9,16 @@ import lombok.Data;
 
 @Data
 public class DataCenter {
-    private int number = -1;
     private List<Participant> participants = newArrayList();
+    private final String name;
 
     public DataCenter(int number) {
-        this.number = number;
+        checkState(number < towns.length, "I need a town name for %s", number);
+        this.name = towns[number];
     }
 
-    public String getName() {
-        switch (number) {
-        case 1:
-            return "Lille";
-        case 2:
-            return "Paris";
-        case 3:
-            return "Ajaccio";
-        default:
-            throw new IllegalStateException("Unknown datacenter " + number);
-        }
-    }
+    private static final String[] towns = { "Dunkerque", "Paris", "Lille", "Ajaccio", //
+            "New-York", "Tokyo", "Sidney", "Moscow", //
+            "Seoul", "Mumbai", "Delhi", "Shanghai", //
+            "Lagos", "Chicago", "Beijing", "Houston" };
 }

@@ -1,50 +1,37 @@
 package org.apache.cassandra.party.web;
 
-import java.util.List;
+import static org.apache.cassandra.party.SimpleTokenCalculator.buildDataCenters;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import javax.servlet.ServletRequest;
 
-import org.apache.cassandra.party.DataCenter;
-import org.apache.cassandra.party.Participant;
-import org.apache.cassandra.party.SimpleTokenCalculator;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
-	@RequestMapping("/")
-	public String indexEmpty() {
-		return "redirect:/index";
-	}
+    @RequestMapping("/index")
+    public ModelAndView index( //
+            @RequestParam(value = "nbDataCenter", defaultValue = "4") int nbDataCenter, //
+            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
+            @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack, //
+            ServletRequest req) {
+        return new ModelAndView("index") //
+                .addObject("currentIp", req.getRemoteAddr()) //
+                .addObject("nbDataCenter", nbDataCenter) //
+                .addObject("nbRackPerDataCenter", nbRackPerDataCenter) //
+                .addObject("nbParticipantPerRack", nbParticipantPerRack) //
+                .addObject("dataCenters", buildDataCenters(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack));
+    }
 
-	@RequestMapping("/index")
-	public String index(Model model, ServletRequest req) {
-		int nbDataCenter = 3;
-		int nbRackPerDataCenter = 2;
-		int nbParticipantPerRack = 8;
-
-		model.addAttribute("nbDataCenter", nbDataCenter);
-		model.addAttribute("nbRackPerDataCenter", nbRackPerDataCenter);
-		model.addAttribute("nbParticipantPerRack", nbParticipantPerRack);
-
-		List<DataCenter> dataCenters = SimpleTokenCalculator.calculate(nbDataCenter, nbRackPerDataCenter,
-				nbParticipantPerRack);
-
-		for (DataCenter datacenter : dataCenters) {
-			System.out.println(datacenter.getName());
-			for (Participant participant : datacenter.getParticipants()) {
-				System.out.println(participant);
-				if (participant.getIp().equals(("" + req.getRemoteAddr()).trim())) {
-					participant.setCurrentUser(true);
-					break;
-				}
-			}
-
-		}
-
-		model.addAttribute("dataCenters", dataCenters);
-
-		return "index";
-	}
+    @ExceptionHandler
+    @ResponseStatus(BAD_REQUEST)
+    public ModelAndView exception(Exception e) {
+        return new ModelAndView("error") //
+                .addObject("error", e.getMessage());
+    }
 }

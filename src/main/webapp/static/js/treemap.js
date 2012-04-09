@@ -3,7 +3,7 @@ var tm, labelType, useGradients, nativeTextSupport, animate;
 function displayTreeMap(json) {
 	if(tm) {
 		$("#infovis").remove();
-		$("#treemap").append("<div id='infovis'></div>");
+		$("#infovis-container").append("<div id='infovis'></div>");
 	}
     tm = new $jit.TM.Squarified({
     injectInto: 'infovis',

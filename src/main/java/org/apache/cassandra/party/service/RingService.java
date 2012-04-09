@@ -25,46 +25,48 @@ import org.springframework.stereotype.Service;
 public class RingService {
 
     @SuppressWarnings("rawtypes")
-    public List<NodeInfo> loadNodeInfos(String hostIp, String keyspace) {
-        if (hostIp == null || hostIp.isEmpty()) {
-            hostIp = "127.0.0.1";
-        }
-
-        List<NodeInfo> results = newArrayList();
-        NodeProbe probe;
-
+    public List<NodeInfo> loadNodeInfos(String host, String keyspace) {
+        NodeProbe probe = null;
         try {
-            probe = new NodeProbe(hostIp);
-        } catch (IOException e) {
-           return results;
-        } catch (InterruptedException e) {
+            probe = getProbe(host);
+            List<NodeInfo> results = newArrayList();
+            Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
+            for (Token token : newArrayList(tokenToEndpoint.keySet())) {
+                NodeInfo nodeInfo = new NodeInfo();
+                nodeInfo.token = token.toString();
+                nodeInfo.ip = tokenToEndpoint.get(token);
+                nodeInfo.dc = getDc(probe, nodeInfo);
+                nodeInfo.rack = getRack(probe, nodeInfo);
+                nodeInfo.status = getStatus(probe, nodeInfo);
+                nodeInfo.state = getState(probe, nodeInfo);
+                nodeInfo.load = getLoad(probe, nodeInfo);
+                nodeInfo.owns = getOwns(probe, token);
+
+                results.add(nodeInfo);
+            }
             return results;
+        } finally {
+            closeProbe(probe);
         }
-    		
-		Map<Token, String> tokenToEndpoint = probe.getTokenToEndpointMap();
-		
-		for (Token token : newArrayList(tokenToEndpoint.keySet())) {
-			NodeInfo nodeInfo = new NodeInfo();
-			nodeInfo.token = token.toString();
-			nodeInfo.ip = tokenToEndpoint.get(token);
-			nodeInfo.dc = getDc(probe, nodeInfo);
-			nodeInfo.rack = getRack(probe, nodeInfo);
-			nodeInfo.status = getStatus(probe, nodeInfo);
-			nodeInfo.state = getState(probe, nodeInfo);
-			nodeInfo.load = getLoad(probe, nodeInfo);
-			nodeInfo.owns = getOwns(probe, token);
-			
-			results.add(nodeInfo);
-		}
-    	
-    	try {
-    	    return results;
-    	} finally {
-    	    try {
-    	        probe.close();
-    	    } catch (IOException ioe) {    	        
-    	    }
-    	}
+    }
+
+    private NodeProbe getProbe(String host) {
+        try {
+            return new NodeProbe(host);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeProbe(NodeProbe probe) {
+        try {
+            if (probe != null) {
+                probe.close();
+            }
+        } catch (IOException ignore) {
+        }
     }
 
     private String getDc(NodeProbe probe, NodeInfo nodeInfo) {
