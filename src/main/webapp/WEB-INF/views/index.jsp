@@ -47,8 +47,8 @@
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>Ip</th>
-					<th>Dc</th>
+					<th>Ip Address</th>
+					<th>Data Center</th>
 					<th>Rack</th>
 					<th>Status</th>
 					<th>State</th>

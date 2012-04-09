@@ -80,7 +80,13 @@ public class RingService {
 
     private String getRack(NodeProbe probe, NodeInfo nodeInfo) {
         try {
-            return probe.getEndpointSnitchInfoProxy().getRack(nodeInfo.ip);
+            String rack = probe.getEndpointSnitchInfoProxy().getRack(nodeInfo.ip);
+            try {
+                int rackNum = Integer.parseInt(rack);
+                rack = "Rack " + rackNum;
+            } catch(Exception e) {                
+            }
+            return rack;
         } catch (UnknownHostException e) {
             return "Unknown";
         }
