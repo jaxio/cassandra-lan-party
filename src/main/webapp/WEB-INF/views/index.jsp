@@ -52,7 +52,7 @@
 									<td><spring:eval expression="participant.ip" /></td>
 									<td><spring:eval expression="participant.rack" /></td>
 									<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
-									<td>
+									<td style="width: 350px; text-align: right;">
 										<code><spring:eval expression="participant.token" /></code>
 										<c:if test="${participant.ip eq currentIp}">&larr; <span class="label label-success">yours</span></c:if>
 									</td>
