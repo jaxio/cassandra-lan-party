@@ -16,15 +16,21 @@
 		<div class="page-header">
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
-			<p>
-				<a class="btn btn-primary" href="<%=request.getContextPath() %>/clp/index"><i class="icon-home icon-white"></i> Home</a>
-				<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
-			</p>
+			<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> Go back home</a>
+			
 		</div>
 
 		<div class="page-header">
 			<h1>Party configuration <small>Grab your token !</small></h1>
 		</div>
+		<div class="btn-group ">
+			<button class="btn btn-primary" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
+		</div>					
+		<div class="well">
+			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.<br/>
+			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
+		</div>
+		
 		<ul class="nav nav-tabs">
 			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
 				<li${status.first ? ' class="active"' : ''}><a href="#<spring:eval expression="dataCenter.name" />" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
@@ -58,10 +64,6 @@
 					</table>
 				</div>
 			</c:forEach>
-		</div>
-		<div class="well">
-			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.<br/>
-			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
 		</div>
 	</div>
 	<!-- party configuration modal dialog -->
