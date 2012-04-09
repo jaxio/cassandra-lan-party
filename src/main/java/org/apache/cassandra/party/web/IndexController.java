@@ -3,8 +3,6 @@ package org.apache.cassandra.party.web;
 import static org.apache.cassandra.party.SimpleTokenCalculator.buildDataCenters;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-import javax.servlet.ServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,13 +13,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class IndexController {
     @RequestMapping("/index")
-    public ModelAndView index( //
+    public String index() {
+        return "index";
+    }
+
+    @RequestMapping("/configuration")
+    public ModelAndView configuration( //
             @RequestParam(value = "nbDataCenter", defaultValue = "4") int nbDataCenter, //
             @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
-            @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack, //
-            ServletRequest req) {
-        return new ModelAndView("index") //
-                .addObject("currentIp", req.getRemoteAddr()) //
+            @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack) {
+        return new ModelAndView("configuration") //
                 .addObject("nbDataCenter", nbDataCenter) //
                 .addObject("nbRackPerDataCenter", nbRackPerDataCenter) //
                 .addObject("nbParticipantPerRack", nbParticipantPerRack) //

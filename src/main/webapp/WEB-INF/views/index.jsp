@@ -17,52 +17,13 @@
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
 			<p>
-				<button class="btn btn-primary btn-warning" data-toggle="modal" href="#partySetup"><i class="icon-edit icon-white"></i> Party setup</button>
 				<button class="btn btn-primary" data-toggle="modal" href="#nodeHost"><i class="icon-refresh icon-white"></i> Change node host</button>
 				<button class="btn btn-primary" id="autoRefresh"><i class="icon-repeat icon-white"></i> Auto-refresh enabled</button>
+				<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/configuration"><i class="icon-edit icon-white"></i> Party setup</a>
 			</p>
 		</div>
-
-		<div class="page-header">
-			<h1>Party configuration <small>Grab your token !</small></h1>
-		</div>
-		<ul class="nav nav-tabs">
-			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<li${status.first ? ' class="active"' : ''}><a href="#<spring:eval expression="dataCenter.name" />" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
-			</c:forEach>
-		</ul>
-		<div class="tab-content">
-			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<div class="tab-pane${status.first ? ' active' : ''}" id="<spring:eval expression="dataCenter.name" />">
-					<table class="table table-striped table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th>Ip</th>
-								<th>Rack</th>
-								<th>Index</th>
-								<th>Token</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${dataCenter.participants}" var="participant">
-								<tr>
-									<td><spring:eval expression="participant.ip" /></td>
-									<td><spring:eval expression="participant.rack" /></td>
-									<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
-									<td style="width: 350px; text-align: right;">
-										<code><spring:eval expression="participant.token" /></code>
-										<c:if test="${participant.ip eq currentIp}">&larr; <span class="label label-success">yours</span></c:if>
-									</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</div>
-			</c:forEach>
-		</div>
 		<div class="well">
-			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.<br/>
-			Your current Ip : <code>${currentIp}</code>
+			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
 		</div>
 
 		<div class="page-header">
@@ -143,41 +104,6 @@
 			<a id="checkProbe" class="btn btn-primary">Check</a>
 		</div>
 	</div>		
-	<!-- party setup modal dialog -->
-	<div class="modal hide fade" id="partySetup">
-		<form action="<%=request.getContextPath() %>/clp/index">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Party setup</h3>
-			</div>
-			<div class="modal-body">
-				<fieldset>
-					<div class="control-group">
-						<label class="control-label" for="nbDataCenter">Number of data centers</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbDataCenter" name="nbDataCenter" placeholder="3" value="3">
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="nbRackPerDataCenter">Number of rack <strong>per</strong> data center</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbRackPerDataCenter" name="nbRackPerDataCenter" placeholder="2" value="2">
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="nbParticipantPerRack">Number of participant <strong>per</strong> rack</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbParticipantPerRack" name="nbParticipantPerRack" placeholder="4" value="4">
-						</div>
-					</div>
-				</fieldset>
-			</div>
-			<div class="modal-footer">
-				<a href="#" data-dismiss="modal" class="btn">Close</a>
-				<button type="subtmi" id="updateProbe" class="btn btn-primary">Generate</button>
-			</div>
-		</form>
-	</div>
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/bootstrap.js" language="javascript" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/jit.js" language="javascript" type="text/javascript"></script>
