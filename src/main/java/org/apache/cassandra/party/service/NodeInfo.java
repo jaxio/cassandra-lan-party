@@ -18,7 +18,10 @@ public class NodeInfo {
     public String $color = "#2d6987";
 
     public int owns() {
-        return Integer.valueOf(substringBefore(owns, ","));
+        String val = substringBefore(owns, ",");
+        val = substringBefore(val, "%");
+        return Integer.valueOf(val);
+
     }
 
     public static enum NodeState {

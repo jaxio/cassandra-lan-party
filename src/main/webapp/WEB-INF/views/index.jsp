@@ -187,6 +187,8 @@
 <script>
 	var contextPath = "<%=request.getContextPath() %>";
 	var autoRefresh = true;
+	var debug = false;
+	
 	// called when dom is ready
 	function loaded() {
 		setupAutoRefresh();
@@ -220,26 +222,31 @@
 	}
 
 	function liveUpdate() {
-		$.getJSON(contextPath + "/clp/rest/treemap?probeHost=" + $("#probeHost").val(), function(json) { displayTreeMap(json);})
+		$.getJSON(contextPath + "/clp/rest/treemap"
+				, {probeHost : $("#probeHost").val(), "debug" : debug}
+				, function(json) { displayTreeMap(json);})
 			.error(function() {$("#infovis").html("An error occured while retrieving ring data");});
-		$.getJSON(contextPath + "/clp/rest/ring?probeHost=" + $("#probeHost").val(), "", function(json) { displayRingTable(json);})
+		$.getJSON(contextPath + "/clp/rest/ring" 
+				, {probeHost : $("#probeHost").val(), "debug" : debug}
+				, function(json) { displayRingTable(json);})
 			.error(function() {$("#ring-table-body").html("An error occured while retrieving ring data");});
 	}
 
 	function displayRingTable(json) {
-  			$("#ring-table-body").empty();
+  			$("#ring-table-body").html("");
 			$.each(json, function(node, node) {
-				$("#ring-table-body").append(
-				+ "<tr>"
-				+ "<td>" + node.ip + "</td>" 
-				+ "<td>" + node.dc + "</td>" 
-				+ "<td>" + node.rack + "</td>" 
-				+ "<td>" + node.status + "</td>" 
-				+ "<td>" + node.state + "</td>" 
-				+ "<td>" + node.load + "</td>" 
-				+ "<td>" + node.owns + "</td>" 
-				+ "<td><code>" + node.token + "</code></td>" 
-				+ "</tr>");
+				$("#ring-table-body").html(
+					$("#ring-table-body").html() 
+					+ "<tr>"
+					+ "<td>" + node.ip + "</td>" 
+					+ "<td>" + node.dc + "</td>" 
+					+ "<td>" + node.rack + "</td>" 
+					+ "<td>" + node.status + "</td>" 
+					+ "<td>" + node.state + "</td>" 
+					+ "<td>" + node.load + "</td>" 
+					+ "<td>" + node.owns + "</td>" 
+					+ "<td><code>" + node.token + "</code></td>" 
+					+ "</tr>");
 			});
 	}
 </script>
