@@ -178,8 +178,8 @@
 	<script src="<%=request.getContextPath() %>/static/js/treemap.js" language="javascript" type="text/javascript"></script>
 </body>
 <script>
-	
-	// called when dom is complete
+	var contextPath = "<%=request.getContextPath() %>";
+	// called when dom is ready
 	function loaded() {
 		setupAutoRefresh();
 		setupLiveUpdates();
@@ -188,9 +188,11 @@
 	
 	function setupLiveUpdates() {
 		liveUpdate();
-		// call live update every 3 seconds
+		// call live update every 3 seconds if auto refresh is enabled
 		setInterval(function() {
-			if (autoRefresh) { liveUpdate();}
+			if (autoRefresh) { 
+				liveUpdate();
+			}
 		}, 3000);
 	}
 	
@@ -199,12 +201,18 @@
 			autoRefresh = !autoRefresh;
 		});
 	}
+
+	function liveUpdate() {
+		$.getJSON(contextPath + "/clp/rest/treemap?probeHost=" + $("#probeHost").val(), function(json) { displayTreeMap(json);})
+			.error(function() {$("#infovis").html("An error occured while retrieving ring data");});
+		$.getJSON(contextPath + "/clp/rest/ring?probeHost=" + $("#probeHost").val(), "", function(json) { displayRingTable(json);})
+			.error(function() {$("#ring-table-body").html("An error occured while retrieving ring data");});
+	}
 	
 	function setupProbeChecker() {
 		$("#checkProbe").click(function() {
-			var url = "<%=request.getContextPath() %>/clp/rest/checkProbe?probeHost=" + $("#probeHost").val(); 
-			$.getJSON(url)
-				.success(function(data) {$("#probeChanged").show();})
+			$.getJSON(contextPath + "/clp/rest/checkProbe?probeHost=" + $("#probeHost").val())
+				.success(function() {$("#probeChanged").show();})
 				.error(function() {$("#probeInvalid").show();});
 		});
 	}
@@ -224,13 +232,6 @@
 				+ "<td><code>" + node.token + "</code></td>" 
 				+ "</tr>");
 			});
-	}
-	
-	function liveUpdate() {
-		$.getJSON("<%=request.getContextPath() %>/clp/rest/treemap?probeHost=" + $("#probeHost").val(), function(json) { displayTreeMap(json);})
-			.error(function() {$("#infovis").html("An error occured while retrieving ring data");});
-		$.getJSON("<%=request.getContextPath() %>/clp/rest/ring?probeHost=" + $("#probeHost").val(), "", function(json) { displayRingTable(json);})
-			.error(function() {$("#ring-table-body").html("An error occured while retrieving ring data");});
 	}
 </script>
 </html>
