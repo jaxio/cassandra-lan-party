@@ -25,7 +25,7 @@
 				<button class="btn btn-primary" id="autoRefresh">Auto-refresh enabled</button>
 			</p>
 		</div>
-		
+
 		<div class="page-header">
 			<h1>Data Centers <small>Grab your token !</small></h1>
 		</div>
@@ -63,7 +63,7 @@
 				</div>
 			</c:forEach>
 		</div>
-		
+
 		<div class="page-header">
 			<h1>Cassandra Ring <small>Live!</small></h1>
 		</div>
@@ -193,7 +193,7 @@
 		setupProbeChecker();
 		setupLiveUpdates();
 	}
-	
+
 	function setupAutoRefresh() {
 		$("#autoRefresh").click(function() {
 			autoRefresh = !autoRefresh;
@@ -218,14 +218,14 @@
 			}
 		}, 3000);
 	}
-	
+
 	function liveUpdate() {
 		$.getJSON(contextPath + "/clp/rest/treemap?probeHost=" + $("#probeHost").val(), function(json) { displayTreeMap(json);})
 			.error(function() {$("#infovis").html("An error occured while retrieving ring data");});
 		$.getJSON(contextPath + "/clp/rest/ring?probeHost=" + $("#probeHost").val(), "", function(json) { displayRingTable(json);})
 			.error(function() {$("#ring-table-body").html("An error occured while retrieving ring data");});
 	}
-	
+
 	function displayRingTable(json) {
   			$("#ring-table-body").empty();
 			$.each(json, function(node, node) {
