@@ -1,10 +1,11 @@
 var tm, labelType, useGradients, nativeTextSupport, animate;
+var visualizationType = "slice-and-dice";
 
 function displayTreeMap(json) {
-	if(tm) {
-		$("#infovis").remove();
-		$("#infovis-container").append("<div id='infovis'></div>");
-	}
+    if(tm) {
+        $("#infovis").remove();
+        $("#infovis-container").append("<div id='infovis'></div>");
+    }
     tm = new $jit.TM.Squarified({
     injectInto: 'infovis',
     titleHeight: 40,
@@ -68,10 +69,21 @@ function displayTreeMap(json) {
         };
     }
   });
+  
   tm.loadJSON(json);
   var util = $jit.util;
-  util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
-  tm.layout.orientation = "v";
+  
+  if (visualizationType == "slice-and-dice") {
+      util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
+      tm.layout.orientation = "v";
+  } else if (visualizationType == "squarified") {
+    util.extend(tm, new $jit.Layouts.TM.Squarified);
+    tm.layout.orientation = "h";
+  } else if (visualizationType == "strip") {
+    util.extend(tm, new $jit.Layouts.TM.Strip);
+    tm.layout.orientation = "v";
+  } 
+  
   tm.refresh();
   
   //add events to radio buttons
@@ -79,21 +91,21 @@ function displayTreeMap(json) {
       st = $jit.id('r-st'),
       sd = $jit.id('r-sd');
   util.addEvent(sq, 'click', function() {
-    util.extend(tm, new $jit.Layouts.TM.Squarified);
-    tm.refresh();
+    visualizationType = "squarified";
+    displayTreeMap(json);
   });
   util.addEvent(st, 'click', function() {
-    util.extend(tm, new $jit.Layouts.TM.Strip);
-    tm.layout.orientation = "v";
-    tm.refresh();
+    visualizationType = "strip";
+    displayTreeMap(json);
   });
   util.addEvent(sd, 'click', function() {
-    util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
-    tm.layout.orientation = "v";
-    tm.refresh();
+    visualizationType = "slice-and-dice";
+    displayTreeMap(json);
   });
   var back = $jit.id('r-back');
-  $jit.util.addEvent(back, 'click', function() {
-    tm.out();
-  });
+  if (back) {
+      $jit.util.addEvent(back, 'click', function() {
+        tm.out();
+      });
+  }
 }
