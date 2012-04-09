@@ -16,8 +16,8 @@
 		<div class="page-header">
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
-				<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/configuration"><i class="icon-arrow-right icon-white"></i> Go to party setup</a>
-
+			<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/configuration"><i class="icon-arrow-right icon-white"></i> Go to party setup</a>
+		</p>
 		<div class="page-header">
 			<h1>Cluster visualization <small>Live !</small></h1>
 		</div>
@@ -110,8 +110,7 @@
 	<script src="<%=request.getContextPath() %>/static/js/jit.js" language="javascript" type="text/javascript"></script>
 	<!--[if IE]><script src="<%=request.getContextPath() %>/static/js/excanvas.js" language="javascript" type="text/javascript" ></script><![endif]-->
 	<script src="<%=request.getContextPath() %>/static/js/treemap.js" language="javascript" type="text/javascript"></script>
-</body>
-<script>
+	<script>
 	var contextPath = "<%=request.getContextPath() %>";
 	var autoRefresh = true;
 	var debug = false;
@@ -208,5 +207,6 @@
 			);
 		});
 	}
-</script>
+	</script>
+</body>
 </html>

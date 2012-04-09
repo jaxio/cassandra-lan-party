@@ -17,28 +17,26 @@
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
 			<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> Go back home</a>
-			
 		</div>
 
 		<div class="page-header">
 			<h1>Party configuration <small>Grab your token !</small></h1>
 		</div>
-		<div class="btn-group ">
-			<button class="btn btn-primary" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
-		</div>					
 		<div class="well">
-			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.<br/>
+			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.
+			<button class="btn btn-primary" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
+			<br/>
 			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
 		</div>
-		
+
 		<ul class="nav nav-tabs">
 			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<li${status.first ? ' class="active"' : ''}><a href="#<spring:eval expression="dataCenter.name" />" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
+				<li${status.first ? ' class="active"' : ''}><a href="#${dataCenter.id}" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
 			</c:forEach>
 		</ul>
 		<div class="tab-content">
 			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<div class="tab-pane${status.first ? ' active' : ''}" id="<spring:eval expression="dataCenter.name" />">
+				<div class="tab-pane${status.first ? ' active' : ''}" id="${dataCenter.id}">
 					<table class="table table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
@@ -51,11 +49,11 @@
 						<tbody>
 							<c:forEach items="${dataCenter.participants}" var="participant">
 								<tr>
-									<td><spring:eval expression="participant.ip" /></td>
-									<td><spring:eval expression="participant.rack" /></td>
-									<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
+									<td>${participant.ip}</td>
+									<td>${participant.rack}</td>
+									<td>${participant.nodeIndexInDataCenter}</td>
 									<td style="width: 350px; text-align: center;">
-										<code><spring:eval expression="participant.token" /></code>
+										<code>${participant.token}</code>
 										<c:if test="${participant.ip eq pageContext.request.remoteAddr}">&larr; <span class="label label-success">yours</span></c:if>
 									</td>
 								</tr>

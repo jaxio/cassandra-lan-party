@@ -1,6 +1,7 @@
 package org.apache.cassandra.party.service;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.cassandra.party.DataCenterNamer.getNicerDataCenterName;
 import static org.apache.cassandra.party.service.NodeInfo.NodeState.joining;
 import static org.apache.cassandra.party.service.NodeInfo.NodeState.leaving;
 import static org.apache.cassandra.party.service.NodeInfo.NodeState.moving;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cassandra.dht.Token;
-import org.apache.cassandra.party.Util;
 import org.apache.cassandra.party.service.NodeInfo.NodeState;
 import org.apache.cassandra.party.service.NodeInfo.NodeStatus;
 import org.apache.cassandra.tools.NodeProbe;
@@ -72,7 +72,7 @@ public class RingService {
 
     private String getDc(NodeProbe probe, NodeInfo nodeInfo) {
         try {
-            return Util.getNicerDataCenterName(probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip));
+            return getNicerDataCenterName(probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip));
         } catch (UnknownHostException e) {
             return "Unknown";
         }
@@ -82,11 +82,10 @@ public class RingService {
         try {
             String rack = probe.getEndpointSnitchInfoProxy().getRack(nodeInfo.ip);
             try {
-                int rackNum = Integer.parseInt(rack);
-                rack = "Rack " + rackNum;
-            } catch(Exception e) {                
+                return "Rack " + Integer.parseInt(rack);
+            } catch (Exception e) {
+                return rack;
             }
-            return rack;
         } catch (UnknownHostException e) {
             return "Unknown";
         }

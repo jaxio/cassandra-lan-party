@@ -60,7 +60,6 @@ public class RingController {
     }
 
     private List<NodeInfo> loadNodeInfos(String probeHost, String keyspace, boolean debug) {
-        System.out.println("loading node infos from " + probeHost + " [" + keyspace + "]");
         if (!debug) {
             return ringService.loadNodeInfos(probeHost, keyspace);
         }
