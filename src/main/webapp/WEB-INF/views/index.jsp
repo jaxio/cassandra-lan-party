@@ -39,8 +39,8 @@
 							<td><spring:eval expression="participant.ip" /></td>
 							<td><spring:eval expression="dataCenter.name" /></td>
 							<td><spring:eval expression="participant.rack" /></td>
-							<td><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
-							<td>
+							<td style="text-align: right"><spring:eval expression="participant.nodeIndexInDataCenter" /></td>
+							<td style="width: 400px; text-align: right">
 								<c:if test="${participant.currentUser}">
 									<strong>
 								</c:if>
