@@ -186,6 +186,7 @@
 </body>
 <script>
 	var contextPath = "<%=request.getContextPath() %>";
+	var autoRefresh = true;
 	// called when dom is ready
 	function loaded() {
 		setupAutoRefresh();
