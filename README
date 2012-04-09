@@ -1,3 +1,5 @@
 
 TOOL TO EASE CASSANDRA LAN PARTY SETUP
 
+
+ifconfig lo0 alias 127.0.0.2

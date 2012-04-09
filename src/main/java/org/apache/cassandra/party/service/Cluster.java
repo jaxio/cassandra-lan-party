@@ -9,7 +9,7 @@ import java.util.List;
 public class Cluster {
     public List<DataCenter> children = newArrayList();
     public String id = randomUUID().toString();;
-    public String name = "Cluster " + new Date();
+    public String name = "Test Cluster (on " + new Date() + ")";
     public ClusterData data = new ClusterData();
 
     public DataCenter getDc(String name) {

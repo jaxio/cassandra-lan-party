@@ -19,7 +19,7 @@ public class IndexController {
 
     @RequestMapping("/configuration")
     public ModelAndView configuration( //
-            @RequestParam(value = "nbDataCenter", defaultValue = "4") int nbDataCenter, //
+            @RequestParam(value = "nbDataCenter", defaultValue = "3") int nbDataCenter, //
             @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
             @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack) {
         return new ModelAndView("configuration") //

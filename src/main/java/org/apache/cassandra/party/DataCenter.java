@@ -1,6 +1,5 @@
 package org.apache.cassandra.party;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
@@ -13,12 +12,6 @@ public class DataCenter {
     private final String name;
 
     public DataCenter(int number) {
-        checkState(number < towns.length, "I need a town name for %s", number);
-        this.name = towns[number];
+        this.name = Util.getNicerDataCenterName(number);
     }
-
-    private static final String[] towns = { "Dunkerque", "Paris", "Lille", "Ajaccio", //
-            "New-York", "Tokyo", "Sidney", "Moscow", //
-            "Seoul", "Mumbai", "Delhi", "Shanghai", //
-            "Lagos", "Chicago", "Beijing", "Houston" };
 }

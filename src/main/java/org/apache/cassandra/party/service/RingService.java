@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cassandra.dht.Token;
+import org.apache.cassandra.party.Util;
 import org.apache.cassandra.party.service.NodeInfo.NodeState;
 import org.apache.cassandra.party.service.NodeInfo.NodeStatus;
 import org.apache.cassandra.tools.NodeProbe;
@@ -71,7 +72,7 @@ public class RingService {
 
     private String getDc(NodeProbe probe, NodeInfo nodeInfo) {
         try {
-            return probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip);
+            return Util.getNicerDataCenterName(probe.getEndpointSnitchInfoProxy().getDatacenter(nodeInfo.ip));
         } catch (UnknownHostException e) {
             return "Unknown";
         }
