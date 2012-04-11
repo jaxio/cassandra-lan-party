@@ -22,7 +22,7 @@ function displayTreeMap(json) {
     },
     duration: 1000,
     Tips: {
-      enable: true,
+      enable: false,
       offsetX: -200,
       offsetY: 10,
       onShow: function(tip, node, isLeaf, domElement) {

@@ -13,6 +13,6 @@ public class Host {
         this.name = node.ip;
         this.data = node;
         this.data.$color = node.status.color();
-        this.data.$area = node.owns();
+        this.data.$area = 1;
     }
 }
