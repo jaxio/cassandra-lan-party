@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class DataCenterNamer {
 
-    private static final String[] towns = { "Dunkerque", "Paris", "Lille", "Ajaccio", //
+    private static final String[] towns = { "Dunkerque", "Lille", "Paris", "Ajaccio", //
             "New-York", "Tokyo", "Sidney", "Moscow", //
             "Seoul", "Mumbai", "Delhi", "Shanghai", //
             "Lagos", "Chicago", "Beijing", "Houston" };

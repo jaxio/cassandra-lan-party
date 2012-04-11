@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
+        
     @RequestMapping("/index")
     public String index() {
         return "index";
@@ -19,14 +20,20 @@ public class IndexController {
 
     @RequestMapping("/configuration")
     public ModelAndView configuration( //
-            @RequestParam(value = "nbDataCenter", defaultValue = "3") int nbDataCenter, //
-            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
+            @RequestParam(value = "nbDataCenter", defaultValue = "1") int nbDataCenter, //
+            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "1") int nbRackPerDataCenter, //
             @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack) {
+        
+        int dc = 1;
+        int r = 1;
+        int pPerRack = 5;
+        
+        
         return new ModelAndView("configuration") //
-                .addObject("nbDataCenter", nbDataCenter) //
-                .addObject("nbRackPerDataCenter", nbRackPerDataCenter) //
-                .addObject("nbParticipantPerRack", nbParticipantPerRack) //
-                .addObject("dataCenters", buildDataCenters(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack));
+                .addObject("nbDataCenter", dc) //
+                .addObject("nbRackPerDataCenter", r) //
+                .addObject("nbParticipantPerRack", pPerRack) //
+                .addObject("dataCenters", buildDataCenters(dc, r, pPerRack));
     }
 
     @ExceptionHandler

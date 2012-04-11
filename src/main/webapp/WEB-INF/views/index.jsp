@@ -12,7 +12,7 @@
 	<title>Cassandra lan party</title>
 </head>
 <body onload="loaded();">
-	<div class="container">
+	<div class="container">	
 		<div class="page-header">
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
@@ -79,7 +79,7 @@
 		</div>
 		<div class="modal-body">
 			<label>Node host</label>
-			<input type="text" id="probeHost" class="input-small" placeholder="127.0.0.1" value="127.0.0.1">
+			<input type="text" id="probeHost" class="input-small" placeholder="127.0.0.1" value="10.1.1.1">
 			<span class="help-inline">This ip should have a running cassandra instance</span>
 			<label>Keyspace</label>
 			<input type="text" id="keyspace" class="input-small" placeholder="ks" value="ks">

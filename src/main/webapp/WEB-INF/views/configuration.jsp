@@ -26,7 +26,7 @@
 			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.
 			<button class="btn btn-primary" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
 			<br/>
-			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
+			Your current Ip : <code>${pageContext.request.remoteHost}</code>
 		</div>
 
 		<ul class="nav nav-tabs">
