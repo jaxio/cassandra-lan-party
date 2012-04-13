@@ -26,7 +26,7 @@
 			<h1>1. Download <small>Grab your distribution !</small></h1>
 		</div>
 		<p>
-			<a href="/static/apache-cassandra-1.0.9-bin.tar.gz" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i>apache-cassandra-1.0.9-bin.tar.gz</a>
+			<a href="/static/apache-cassandra-1.0.9-bin.tar.gz" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i> apache-cassandra-1.0.9-bin.tar.gz</a>
 		</p>
 		
 		<div class="page-header">
