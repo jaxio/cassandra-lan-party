@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.cassandra.party.service.NodeInfo;
+import org.apache.cassandra.party.service.NodeInfo.NodeState;
+import org.apache.cassandra.party.service.NodeInfo.NodeStatus;
 import org.apache.cassandra.party.service.RingService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -59,8 +61,8 @@ public class RingController {
                     nodeInfo.ip = String.format("10.%d.%d.%d", dc, rack, participant);
                     nodeInfo.dc = "datacenter" + dc;
                     nodeInfo.rack = "rack" + rack;
-                    nodeInfo.status = NodeInfo.NodeStatus.values()[RandomUtils.nextInt(NodeInfo.NodeStatus.values().length)];
-                    nodeInfo.state = NodeInfo.NodeState.values()[RandomUtils.nextInt(NodeInfo.NodeState.values().length)];
+                    nodeInfo.status = randomStatus();
+                    nodeInfo.state = randomState();
                     nodeInfo.load = "" + RandomUtils.nextInt(101);
                     nodeInfo.owns = nodeInfo.load + "%";
                     results.add(nodeInfo);
@@ -68,5 +70,17 @@ public class RingController {
             }
         }
         return results;
+    }
+
+    private NodeState randomState() {
+        return NodeInfo.NodeState.values()[RandomUtils.nextInt(NodeInfo.NodeState.values().length)];
+    }
+
+    private NodeStatus randomStatus() {
+        NodeStatus ret = NodeInfo.NodeStatus.values()[RandomUtils.nextInt(NodeInfo.NodeStatus.values().length)];
+        if (ret == NodeStatus.unknown && RandomUtils.nextInt(10) < 7) { // allow only 30% of generated unknown
+            return randomStatus();
+        }
+        return ret;
     }
 }

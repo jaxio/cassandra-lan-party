@@ -98,6 +98,16 @@
 		);
 	}
 
+	function statusColor(status) {
+		if (status == "down") {
+			return "btn-danger";
+		} else if (status == "up") {
+			return "btn-success";
+		} else {
+			return "";
+		}
+	}
+
 	function displayRingTable(json) {
 		$("#ring-table-body").html("");
 		$.each(json, function(node, node) {
@@ -107,7 +117,7 @@
 				+ "<td>" + node.ip + "</td>" 
 				+ "<td>" + node.dc + "</td>" 
 				+ "<td>" + node.rack + "</td>" 
-				+ "<td>" + node.status + "</td>" 
+				+ "<td><button class='btn btn-small " + statusColor(node.status) + "' style='width:100%'></button></td>" 
 				+ "<td>" + node.state + "</td>" 
 				+ "<td>" + node.load + "</td>" 
 				+ "<td>" + node.owns + "</td>" 
