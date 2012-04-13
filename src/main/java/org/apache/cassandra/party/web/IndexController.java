@@ -18,7 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
-        
+
+    private static final String DUMMY_USER_TOKEN = "68056473384187692692674921486353642293";
+    private static final String DUMMY_USER_CLUSTER = "dc3";
+    private static final String DUMMY_USER_HOST = "10.3.1.2";
+
     @RequestMapping("/index")
     public ModelAndView index(HttpServletRequest request) {
         return new ModelAndView("index") //
@@ -45,11 +49,8 @@ public class IndexController {
     }
 
     private String yourIp(HttpServletRequest request) {
-        String yourIp = request.getRemoteAddr();
-        if (yourIp.endsWith("1%0")) {
-            yourIp = "10.3.1.2";
-        }
-        return yourIp;
+        String yourIp = request.getRemoteHost();
+        return yourIp.equals("127.0.0.1") || yourIp.endsWith("1%0") ? DUMMY_USER_HOST : yourIp;
     }
 
     private String clientDataCenter(List<DataCenter> dataCenters, String remoteAddr) {
@@ -60,7 +61,7 @@ public class IndexController {
                 }
             }
         }
-        return "dc3";
+        return DUMMY_USER_CLUSTER;
     }
 
     private String clientToken(List<DataCenter> dataCenters, String remoteAddr) {
@@ -71,7 +72,7 @@ public class IndexController {
                 }
             }
         }
-        return "68056473384187692692674921486353642293";
+        return DUMMY_USER_TOKEN;
     }
 
     @ExceptionHandler

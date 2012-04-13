@@ -8,6 +8,7 @@
 <head>
 	<link href="<%=request.getContextPath() %>/static/css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link href="<%=request.getContextPath() %>/static/css/treemap.css" type="text/css" rel="stylesheet" />
+	<link href="<%=request.getContextPath() %>/static/css/prettify.css" type="text/css" rel="stylesheet" />
 	<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<title>Cassandra lan party</title>
 </head>
@@ -20,6 +21,7 @@
 				<a class="btn btn-primary btn-large" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> See live party !</a>
 			</p>
 		</div>
+
 		<div class="page-header">
 			<h1>1. Download <small>Grab your distribution !</small></h1>
 		</div>
@@ -28,7 +30,7 @@
 		</p>
 		
 		<div class="page-header">
-			<h1>2. Configure <small>Configure your install</small></h1>
+			<h1>2. Configure <small>Configure your cassandra</small></h1>
 		</div>
 		<p>
 			Unzip the distribution and open <code>conf/cassandra.yaml</code> and update the following properties
@@ -59,7 +61,14 @@
 		</table>
 
 		<div class="page-header">
-			<h1>3. Party <small>See the party machine and tokens.</small></h1>
+			<h1>4. Launch ! <small>but not just yet</small></h1>
+		</div>
+		<p>
+			Wait for the staff go, and run your cassandra instance by executing <code>bin/cassandra -f</code>
+		</p>
+
+		<div class="page-header">
+			<h1>5. Party <small>See the party machine and tokens.</small></h1>
 		</div>
 		<div class="well">
 			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.
@@ -103,11 +112,26 @@
 				</div>
 			</c:forEach>
 		</div>
+
+		<div class="page-header">
+			<h1>6. Client <small>Time to fiddle with values.</small></h1>
+		</div>
+		<p>
+			See the ring status &rarr; <code>bin/nodetool -h ${yourIp} ring</code>
+		</p>
+		<p>
+			Launch the cassandra console <code>bin/cassandra-cli -h ${yourIp}</code> and execute the following commands
+			<pre class="prettyprint linenums">use ks;
+set party[‘devoxx’][‘${yourIp}’]=your name;
+list party;</pre>
+		</p>
 	</div>
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/static/js/google-code-prettify.js" language="javascript" type="text/javascript"></script>
 	<script>
 		$(".popupDoc").popover({placement:'bottom'})
+		window.prettyPrint && prettyPrint();
 	</script>
 </body>
 </html>
