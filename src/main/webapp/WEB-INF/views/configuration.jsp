@@ -13,10 +13,12 @@
 </head>
 <body onload="loaded();">
 	<div class="container">
-		<div class="page-header">
+		<div class="hero-unit" style="padding: 25px">
 			<h1>Cassandra Lan Party</h1>
-			<h3>Devoxx fr 2012</h3>
-			<a class="btn btn-primary" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> Go back home</a>
+			<p>Join the #devoxxfr party !</p>
+			<p>
+				<a class="btn btn-primary btn-large" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> See live party !</a>
+			</p>
 		</div>
 		<div class="page-header">
 			<h1>1. Download <small>Grab your distribution !</small></h1>

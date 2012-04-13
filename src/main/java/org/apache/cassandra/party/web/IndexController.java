@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
+        
     @RequestMapping("/index")
     public ModelAndView index(HttpServletRequest request) {
         return new ModelAndView("index") //

@@ -12,7 +12,7 @@
 </head>
 <body onload="loaded();">
 	<div class="container">
-		<div class="hero-unit">
+		<div class="hero-unit" style="padding: 25px">
 			<h1>Cassandra Lan Party</h1>
 			<p>Join the #devoxxfr party !</p>
 			<p>
@@ -50,19 +50,6 @@
 			</tbody>
 		</table>
 	</div>
-	<script id="hostTableTrTemplate" type="text/x-jquery-tmpl">
-		<tr>
-			<td>a${ip}</td>
-			<td>${Dc}</td>
-			<td>${rack}</td>
-			<td>${status}</td>
-			<td>${state}</td>
-			<td>${load}</td>
-			<td>${owns}</td>
-			<td style="width: 350px; text-align: center;"><code>${token}</code></td>
-		</tr>
-	</script>
-	
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath() %>/static/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
 	<script src="https://raw.github.com/jquery/jquery-tmpl/master/jquery.tmpl.js" language="javascript" type="text/javascript"></script>
