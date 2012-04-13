@@ -23,7 +23,7 @@
 		<div class="page-header">
 			<h1>Cassandra Ring <small>Live !</small> <button class="btn btn-primary btn-small" id="autoRefresh"><i class="icon-stop icon-white"></i> Disable Auto-refresh</button></h1>
 		</div>
-		<table class="table table-striped table-bordered table-condensed">
+		<table class="table table-striped table-condensed">
 			<thead>
 				<tr>
 					<th>Ip Address</th>
