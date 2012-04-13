@@ -1,13 +1,13 @@
 package org.apache.cassandra.party.web;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.cassandra.party.service.Cluster.buildCluster;
+import static com.google.common.collect.Sets.newTreeSet;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.List;
+import java.util.TreeSet;
 
-import org.apache.cassandra.party.service.Cluster;
 import org.apache.cassandra.party.service.NodeInfo;
 import org.apache.cassandra.party.service.RingService;
 import org.apache.commons.lang.RandomStringUtils;
@@ -23,32 +23,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class RingController {
 
+    private String probeHost = "127.0.0.1";
+    private String keyspace = "ks";
+
     @Autowired
     private RingService ringService;
 
     @RequestMapping(value = "/rest/ring", method = GET, produces = "application/json")
     @ResponseBody
-    public List<NodeInfo> ring( //
-            @RequestParam(defaultValue = "127.0.0.1") String probeHost, //
-            @RequestParam(defaultValue = "ks") String keyspace, //
-            @RequestParam(defaultValue = "false") boolean debug) {
-        return loadNodeInfos(probeHost, keyspace, debug);
-    }
-
-    @RequestMapping(value = "/rest/treemap", method = GET, produces = "application/json")
-    @ResponseBody
-    public Cluster treemap( //
-            @RequestParam(defaultValue = "127.0.0.1") String probeHost, //
-            @RequestParam(defaultValue = "ks") String keyspace, //
-            @RequestParam(defaultValue = "false") boolean debug) {
-        return buildCluster(loadNodeInfos(probeHost, keyspace, debug));
-    }
-
-    @RequestMapping(value = "/rest/checkProbe", method = GET, produces = "application/json")
-    @ResponseBody
-    public String checkProbe(@RequestParam String probeHost, @RequestParam String keyspace) {
-        ringService.loadNodeInfos(probeHost, keyspace);
-        return "{\"message\":\"ok\"}";
+    public TreeSet<NodeInfo> ring(@RequestParam(defaultValue = "false") boolean debug) {
+        return newTreeSet(loadNodeInfos(probeHost, keyspace, debug));
     }
 
     @ExceptionHandler
@@ -63,9 +47,9 @@ public class RingController {
         if (!debug) {
             return ringService.loadNodeInfos(probeHost, keyspace);
         }
-        int maxDc = RandomUtils.nextInt(4) + 1;
-        int maxRackPerDc = RandomUtils.nextInt(4) + 1;
-        int maxParticipantPerDc = RandomUtils.nextInt(5) + 2;
+        int maxDc = 3;
+        int maxRackPerDc = 1;
+        int maxParticipantPerDc = RandomUtils.nextInt(6) + 4;
         List<NodeInfo> results = newArrayList();
         for (int dc = 1; dc <= maxDc; dc++) {
             for (int rack = 1; rack <= maxRackPerDc; rack++) {
@@ -79,7 +63,6 @@ public class RingController {
                     nodeInfo.state = NodeInfo.NodeState.values()[RandomUtils.nextInt(NodeInfo.NodeState.values().length)];
                     nodeInfo.load = "" + RandomUtils.nextInt(101);
                     nodeInfo.owns = nodeInfo.load + "%";
-
                     results.add(nodeInfo);
                 }
             }

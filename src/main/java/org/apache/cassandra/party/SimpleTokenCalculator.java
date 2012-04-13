@@ -15,9 +15,7 @@ public class SimpleTokenCalculator {
 
     public static List<DataCenter> buildDataCenters(int nbDataCenter, int nbRackPerDataCenter, int nbParticipantPerRack) {
         List<DataCenter> dataCenters = newArrayList();
-
         int nbParticipantPerDataCenter = nbRackPerDataCenter * nbParticipantPerRack;
-
         for (int dc = 1; dc <= nbDataCenter; dc++) {
             DataCenter dataCenter = new DataCenter(dc);
 
@@ -30,7 +28,7 @@ public class SimpleTokenCalculator {
 
                     // we alternate token
                     p.setNodeIndexInDataCenter(rack + (positionInRack - 1) * nbRackPerDataCenter);
-                    setParticipantToken(nbParticipantPerDataCenter, p);
+                    p.setToken(buildToken(nbParticipantPerDataCenter, p));
                     dataCenter.getParticipants().add(p);
                 }
             }
@@ -39,12 +37,11 @@ public class SimpleTokenCalculator {
         return dataCenters;
     }
 
-    private static void setParticipantToken(int nbParticipantPerDataCenter, Participant p) {
-        BigInteger token = new BigInteger("2");
-        token = token.pow(127);
-        token = token.multiply(new BigInteger("" + (p.getNodeIndexInDataCenter() - 1)));
-        token = token.divide(new BigInteger("" + nbParticipantPerDataCenter));
-        // the DC +1 trick
-        p.token = token.add(new BigInteger("" + (p.getDc() - 1))).toString();
+    private static String buildToken(int nbParticipantPerDataCenter, Participant p) {
+        return "" + BigInteger.valueOf(2) //
+                .pow(127) //
+                .multiply(new BigInteger("" + (p.getNodeIndexInDataCenter() - 1))) //
+                .divide(new BigInteger("" + nbParticipantPerDataCenter)) //
+                .add(new BigInteger("" + (p.getDc() - 1))); // the DC +1 trick
     }
 }

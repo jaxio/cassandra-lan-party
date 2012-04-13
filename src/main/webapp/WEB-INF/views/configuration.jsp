@@ -16,27 +16,65 @@
 		<div class="page-header">
 			<h1>Cassandra Lan Party</h1>
 			<h3>Devoxx fr 2012</h3>
-			<a class="btn btn-primary btn-warning" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> Go back home</a>
+			<a class="btn btn-primary" href="<%=request.getContextPath() %>/clp/index"><i class="icon-arrow-left icon-white"></i> Go back home</a>
 		</div>
+		<div class="page-header">
+			<h1>1. Download <small>Grab your distribution !</small></h1>
+		</div>
+		<p>
+			<a href="/static/apache-cassandra-1.0.9-bin.tar.gz" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i>apache-cassandra-1.0.9-bin.tar.gz</a>
+		</p>
+		
+		<div class="page-header">
+			<h1>2. Configure <small>Configure your install</small></h1>
+		</div>
+		<p>
+			Unzip the distribution and open <code>conf/cassandra.yaml</code> and update the following properties
+		</p>
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr class="popupDoc" title="<code>Line 22</code>" data-content="The principle is that each node should be given an equal slice of the token ring, here it is computed for you to have a nicely even ring, find it below.">
+					<td><code>initial_token:</code></td>
+					<td><code>initial_token: ${yourToken}</code></td>
+				</tr>
+				<tr class="popupDoc" title="<code>Line 98</code>" data-content="One seed for each datacenter, here we just get the first node in each datacenter.">
+					<td><code>-seeds: "127.0.0.1"</code></td>
+					<td><code>-seeds: "10.1.1.1,10.2.1.1,10.3.1.1"</code></td>
+				</tr>
+				<tr class="popupDoc" title="<code>Line 181</code>" data-content="You need to listen to your real ip, so the other nodes can talk to you.">
+					<td><code>listen_address: localhost</code></td>
+					<td><code>listen_address: ${yourIp}</code></td>
+				</tr>
+				<tr class="popupDoc" title="<code>Line 193</code>" data-content="You need to listen to your real ip, so the other nodes can talk to you.">
+					<td><code>rpc_address: localhost</code></td>
+					<td><code>rpc_address: ${yourIp}</code></td>
+				</tr>
+				<tr class="popupDoc" title="<code>Line 343</code>" data-content="Proximity is determined by rack and data center, which are assumed to correspond to the 3rd and 2nd octet of each node's IP address, respectively.">
+					<td><code>endpoint_snitch: org.apache.cassandra.locator.SimpleSnitch</code></td>
+					<td><code>endpoint_snitch: org.apache.cassandra.locator.RackInferringSnitch</code></td>
+				</tr>
+			</tbody>
+		</table>
 
 		<div class="page-header">
-			<h1>Party configuration <small>Grab your token !</small></h1>
+			<h1>3. Party <small>See the party machine and tokens.</small></h1>
 		</div>
 		<div class="well">
 			${nbDataCenter} Data centers, ${nbRackPerDataCenter} Racks per data center, ${nbParticipantPerRack} Participants per rack.
-			<button class="btn btn-primary" data-toggle="modal" href="#partyConfiguration"><i class="icon-edit icon-white"></i> Change party configuration</button>
-			<br/>
-			Your current Ip : <code>${pageContext.request.remoteAddr}</code>
 		</div>
 
 		<ul class="nav nav-tabs">
 			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<li${status.first ? ' class="active"' : ''}><a href="#${dataCenter.id}" data-toggle="tab"><spring:eval expression="dataCenter.name" /></a></li>
+				<li${dataCenter.id eq yourDataCenterId ? ' class="active"' : ''}>
+					<a href="#${dataCenter.id}" data-toggle="tab">
+						${dataCenter.id == yourDataCenterId ? '<i class="icon-arrow-down"></i> ' : ''}<spring:eval expression="dataCenter.name" />
+					</a>
+				</li>
 			</c:forEach>
 		</ul>
 		<div class="tab-content">
 			<c:forEach items="${dataCenters}" var="dataCenter" varStatus="status">
-				<div class="tab-pane${status.first ? ' active' : ''}" id="${dataCenter.id}">
+				<div class="tab-pane${dataCenter.id eq yourDataCenterId ? ' active' : ''}" id="${dataCenter.id}">
 					<table class="table table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
@@ -52,9 +90,9 @@
 									<td>${participant.ip}</td>
 									<td>${participant.rack}</td>
 									<td>${participant.nodeIndexInDataCenter}</td>
-									<td style="width: 350px; text-align: center;">
+									<td style="width: 350px;">
 										<code>${participant.token}</code>
-										<c:if test="${participant.ip eq pageContext.request.remoteAddr}">&larr; <span class="label label-success">yours</span></c:if>
+										${participant.ip == yourIp ? '&larr; <span class="label label-success">yours</span>' : ''}
 									</td>
 								</tr>
 							</c:forEach>
@@ -64,42 +102,10 @@
 			</c:forEach>
 		</div>
 	</div>
-	<!-- party configuration modal dialog -->
-	<div class="modal hide fade" id="partyConfiguration">
-		<form action="<%=request.getContextPath() %>/clp/configuration">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Party configuration</h3>
-			</div>
-			<div class="modal-body">
-				<fieldset>
-					<div class="control-group">
-						<label class="control-label" for="nbDataCenter">Number of data centers</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbDataCenter" name="nbDataCenter" placeholder="3" value="3">
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="nbRackPerDataCenter">Number of rack <strong>per</strong> data center</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbRackPerDataCenter" name="nbRackPerDataCenter" placeholder="2" value="2">
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="nbParticipantPerRack">Number of participant <strong>per</strong> rack</label>
-						<div class="controls">
-							<input type="text" class="input" id="nbParticipantPerRack" name="nbParticipantPerRack" placeholder="4" value="4">
-						</div>
-					</div>
-				</fieldset>
-			</div>
-			<div class="modal-footer">
-				<a href="#" data-dismiss="modal" class="btn">Close</a>
-				<button type="subtmi" id="updateProbe" class="btn btn-primary">Generate</button>
-			</div>
-		</form>
-	</div>
 	<script src="<%=request.getContextPath() %>/static/js/jquery-1.7-min.js" type="text/javascript"></script>
-	<script src="<%=request.getContextPath() %>/static/js/bootstrap.js" language="javascript" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/static/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
+	<script>
+		$(".popupDoc").popover({placement:'bottom'})
+	</script>
 </body>
 </html>

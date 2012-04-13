@@ -1,10 +1,13 @@
 package org.apache.cassandra.party.service;
 
 import static org.apache.commons.lang.StringUtils.substringBefore;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+
 import lombok.ToString;
 
 @ToString
-public class NodeInfo {
+public class NodeInfo implements Comparable<NodeInfo> {
     public String ip;
     public String dc;
     public String rack;
@@ -49,5 +52,10 @@ public class NodeInfo {
         public String color() {
             return color;
         }
+    }
+
+    @Override
+    public int compareTo(NodeInfo o) {
+       return toString().compareTo(o.toString());
     }
 }
