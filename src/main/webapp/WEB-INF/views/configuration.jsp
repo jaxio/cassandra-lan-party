@@ -27,6 +27,8 @@
 		</div>
 		<p>
 			<a href="/static/apache-cassandra-1.0.9-bin.tar.gz" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i> apache-cassandra-1.0.9-bin.tar.gz</a>
+			<a href="/static/datastax-community-64bit.msi" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i> datastax-community-64bit.msi (Windows)</a>
+			<a href="/static/datastax-community-32bit.msi" class="btn btn-primary btn-success"><i class="icon-download-alt icon-white"></i> datastax-community-32bit.msi (Windows)</a>
 		</p>
 		
 		<div class="page-header">
@@ -37,6 +39,10 @@
 		</p>
 		<table class="table table-bordered table-striped">
 			<tbody>
+				<tr>
+					<th>Before</th>
+					<th>After</th>
+				</tr>
 				<tr class="popupDoc" title="<code>Line 22</code>" data-content="The principle is that each node should be given an equal slice of the token ring, here it is computed for you to have a nicely even ring, find it below.">
 					<td><code>initial_token:</code></td>
 					<td><code>initial_token: ${yourToken}</code></td>
@@ -60,8 +66,19 @@
 			</tbody>
 		</table>
 
+		<h3>Create these folders with proper owner</h3>		
+		<pre class="prettyprint">sudo mkdir /var/lib/cassandra
+sudo chown yourUsername /var/lib/cassandra	
+sudo mkdir /var/log/cassandra
+sudo chown yourUsername /var/log/cassandra
+</pre>
+		<h3>Change the log level to DEBUG</h3>
+<pre>Edit conf/log4j-server.properties (log4j.rootLogger=DEBUG,stdout,R)
+Edit conf/log4j-tools.properties (log4j.rootLogger=DEBUG,stderr)
+</pre>
+
 		<div class="page-header">
-			<h1>4. Launch ! <small>but not just yet</small></h1>
+			<h1>4. Wait for our GO to launch!</h1>
 		</div>
 		<p>
 			Wait for the staff go, and run your cassandra instance by executing <code>bin/cassandra -f</code>
@@ -122,7 +139,9 @@
 		<p>
 			Launch the cassandra console <code>bin/cassandra-cli -h ${yourIp}</code> and execute the following commands
 			<pre class="prettyprint linenums">use ks;
-set party[‘devoxx’][‘${yourIp}’]=your name;
+set party['devoxx']['${yourIp}']='your name';
+get party['devoxx']['${yourIp}'];
+get party['devoxx'];
 list party;</pre>
 		</p>
 	</div>

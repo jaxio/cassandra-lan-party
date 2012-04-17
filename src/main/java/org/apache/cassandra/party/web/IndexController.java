@@ -33,8 +33,8 @@ public class IndexController {
     @RequestMapping("/configuration")
     public ModelAndView configuration( //
             @RequestParam(value = "nbDataCenter", defaultValue = "3") int nbDataCenter, //
-            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "2") int nbRackPerDataCenter, //
-            @RequestParam(value = "nbParticipantPerRack", defaultValue = "5") int nbParticipantPerRack, //
+            @RequestParam(value = "nbRackPerDataCenter", defaultValue = "1") int nbRackPerDataCenter, //
+            @RequestParam(value = "nbParticipantPerRack", defaultValue = "10") int nbParticipantPerRack, //
             HttpServletRequest request) {
         List<DataCenter> dataCenters = buildDataCenters(nbDataCenter, nbRackPerDataCenter, nbParticipantPerRack);
         String yourIp = yourIp(request);

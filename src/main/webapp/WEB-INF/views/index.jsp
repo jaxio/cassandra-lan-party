@@ -56,7 +56,7 @@
 	<script>
 	var contextPath = "<%=request.getContextPath() %>";
 	var autoRefresh = true;
-	var debug = true;
+	var debug = false;
 
 	// called when dom is ready
 	function loaded() {
